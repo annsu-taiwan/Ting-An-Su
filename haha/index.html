@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Deep Coffee 線上點餐</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+        /* 1. 正確載入字體檔案 */
+        @font-face {
+            font-family: 'ChenYuLuoYan';
+            /* 使用 2.0 最新版本路徑 */
+            src: url('https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
+            font-display: swap; /* 確保網頁載入時字體不留白 */
+        }
+        /* 2. 全域放大設定 */
+        html {
+            /* 將基礎字級從預設的 16px 提升到 20px */
+            font-size: 20px;
+        }
+        
+        :root {
+            --primary: #9f9fb8;
+            --accent: #353569; /* 稍微深一點，手寫字才清晰 */
+        }
+
+        /* 2. 強制套用至所有元素 */
+        *, body, html, input, button, select, textarea {
+            /* 這裡的名稱必須與上方 @font-face 定義的一致 */
+            font-family: 'Caveat', 'ChenYuLuoYan', "Microsoft JhengHei", sans-serif !important;
+            -webkit-font-smoothing: antialiased;line-height: 1.6;
+        }
+
+        body {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            overflow: hidden; 
+            background-color: #F8FBF8; /* 魚肚白 */
+            user-select: none;
+            -webkit-user-select: none;
+            color: var(--accent);
+        }
+
+        /* 3. 針對特定元件進一步放大 */
+        h1 { font-size: 2.2rem; } /* 標題 */
+        h3 { font-size: 1.8rem; } /* Menu 標題 */
+
+        /* 保留特定的英文手寫風格 */
+        .handwriting-elegant {
+            font-family: 'Dancing Script', cursive !important;
+            font-size: 1.8rem;
+        }
+
+        .handwriting-natural {
+            font-family: 'Caveat', cursive !important;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .slider-container { 
+            display: flex; width: 600%; height: 100vh; 
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            touch-action: pan-y; margin: 0;  /* 💡 確保沒有外邊距 */
+            padding: 0; /* 💡 確保沒有內邊距 */;
+        }
+        
+        .page {
+            width: calc(100% / 6);
+            height: 100vh; /* 確保佔滿全螢幕高度 */
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; /* 💡 這是垂直置中的關鍵 */
+            padding: 0; /* 💡 先將 padding 設為 0，避免推擠內容 */
+            margin: 0;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .content-card { 
+            background: none; 
+            box-shadow: none;
+            padding: 0; /* 💡 移除內距，讓置中更精確 */
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page:not(.page-p1)::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;transform: translateY(-20px);
+        }
+        
+        /* =========================================
+           1. Menu 頁面整體佈局 (置頂與間距縮小)
+           ========================================= */
+        .page-menu {
+            /* 核心：從頂部開始排列，不再居中 */
+            justify-content: flex-start !important; 
+            padding-top: 6vh; 
+        }
+
+        .page-menu .content-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            overflow: hidden; /* 防止卡片本身捲動 */
+        }
+
+        /* 💡 縮小「Menu」標題間距 */
+        .page-menu h3 {
+            margin-top: 40px !important;
+            margin-bottom: 20px !important; /* 緊貼下方按鈕 */
+            line-height: 1.2;
+        }
+
+        /* 💡 縮小「分類按鈕」容器間距 */
+        .page-menu .content-card > div:nth-child(2) {
+            margin-bottom: 0px !important; 
+        }
+
+                /* 💡 縮小「分類說明文字」間距 */
+        #category-desc {
+            margin-top: 0px !important;
+            margin-bottom: 15px !important; 
+            line-height: 1;
+            opacity: 0.8;
+        }
+        /* =========================================
+           2. 商品列表捲動區塊 (不變，保留核心邏輯)
+           ========================================= */
+           #product-list {
+            width: 100%; 
+            margin-top: 5px; /* 緊貼上方說明 */
+            overflow-y: auto; 
+            max-height: 55vh; 
+            padding-bottom: 100px; /* 預留底部按鈕空間 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 捲動條美化 */
+        #product-list::-webkit-scrollbar { width: 4px; }
+        #product-list::-webkit-scrollbar-thumb {
+            background: rgba(199, 181, 163, 0.4);
+            border-radius: 10px;
+        }
+
+        /* =========================================
+           3. 商品單項與右側資訊 (極致縮小行距)
+           ========================================= */
+        .product { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 8px 12px; /* 縮減內距讓框框變扁 */
+            background: rgba(255, 255, 255, 0.9);
+            margin-bottom: 6px; 
+            border-radius: 8px;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+        .product-info {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .product-price-section {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0px; /* 移除庫存、價格、按鈕間的縫隙 */
+        }
+
+        /* 強制縮小右側三行文字的行高 */
+        .product-price-section span, 
+        .product-price-section div {
+            line-height: 1.1 !important;
+            margin: 0 !important;
+        }
+
+        /* =========================================
+           4. 純文字按鈕樣式
+           ========================================= */
+        .qty-btn {
+            background: none !important;
+            border: none !important;
+            color: var(--accent) !important;
+            font-size: 1.5rem !important; 
+            padding: 0 10px !important;
+            cursor: pointer;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+        /* 💡 2. 導覽按鈕：移除框框，改為底線設計 */
+        .nav-btn {
+            background: none !important;
+            border: none !important;
+            color: var(--accent) !important;
+            font-size: 1.2rem !important;
+            padding: 10px 0 !important;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: none !important;
+        }
+
+        .nav-footer {
+            position: absolute;
+            bottom: 50px;           /* 💡 距離底部 50px，可自行調整 */
+            left: 50%;
+            transform: translateX(-50%); /* 💡 完美水平置中 */
+            width: 90%;
+            max-width: 650px;       /* 💡 配合您先前的加寬需求 */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-footer .nav-btn {
+            width: 100%;
+        }
+
+        /* 庫存文字再縮小一點點 */
+        .stock-text {
+            font-size: 0.8rem !important;
+            margin-bottom: -2px !important; /* 稍微往下拉近與價格的距離 */
+        }
+
+        /* 價格字體大小維持，但移除間距 */
+        .price-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); transition: width 0.3s; z-index: 1000; }
+       
+        /* 💡 1. 分類選擇區：改為純文字感 */
+        .cat-btn {
+            background: none !important;
+            border: none !important;
+            padding: 5px 10px !important;
+            cursor: pointer;
+            font-size: 1.4rem !important;
+            color: #9090b7; /* 未選中時的顏色 */
+            transition: color 0.3s;
+            box-shadow: none !important;
+        }
+
+        /* 選中狀態：顏色變為原本的背景深色 (var(--accent)) */
+        .cat-btn.active {
+            color: #aaaabb !important;
+            font-weight: bold;
+        }
+        
+        .page-checkout {
+            /* 核心：從頂部開始排列，不再居中 */
+            justify-content: flex-start !important; 
+            padding-top: 3vh; 
+        }
+
+        /* 如果您有幫結帳頁面的 section 加入 page-checkout 類別 */
+        .page-checkout .content-card  {
+            justify-content: flex-start !important;
+            padding-top: 0px; /* 💡 稍微往上提 */
+        }
+
+        /* 💡 3. 控制左右兩大欄位的間距與彈性 */
+        .checkout-flex-container {
+            display: flex; 
+            gap: 30px; /* 增加兩欄之間的呼吸空間 */
+            flex-wrap: wrap; 
+            width: 100%;
+        }
+
+        .checkout-column {
+            flex: 1; 
+            min-width: 300px; /* 💡 稍微增加最小寬度，讓單欄時也很大氣 */
+            max-width: 100%;
+            text-align: left;
+        }
+
+        /* 💡 針對手機版 (螢幕寬度 600px 以下) 的微調 */
+        @media (max-width: 600px) {
+            .content-card {
+                padding: 10px; /* 縮小內距，留更多空間給輸入框 */
+            }
+    
+            .checkout-column {
+                min-width: 100%; /* 強制手機版佔滿全寬 */
+            }
+    
+            #cart-summary {
+                padding: 10px !important; /* 縮小購物清單內距 */
+            }
+        }
+
+        #cart-summary {
+            /* 💡 讓灰色格子變寬，佔滿父容器空間 */
+            width: 100%;
+            max-width: 600px; 
+    
+            /* 💡 縮小與上方「請匯款至」的距離 */
+            margin-top: 0 !important;
+            margin-bottom: 15px;
+            
+            /* 💡 調整內距與外觀 */
+            background: #f5f5f5;
+            padding: 15px !important; /* 增加內距讓文字不擁擠 */
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #353569;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* 💡 縮小清單內部的行高，讓文字更緊湊 */
+        #cart-summary br {
+            content: "";
+            margin: 2px 0;
+            display: block;
+        }
+
+        #cart-summary hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        /* 統一輸入框與下拉選單的樣式 */
+            /* 讓填資料的格子變小、更精緻 */
+        /* 💡 3. 輸入框與下拉選單：全部改為底線式 */
+        input, select, textarea {
+            width: 100%;
+            /* 移除所有邊框，僅保留底線 */
+            border: none !important;
+            border-bottom: 1px solid #ddd !important;
+            border-radius: 0 !important;
+            background-color: transparent !important;
+            padding: 5px 0px !important;
+            margin-top: 0px;
+            font-size: 1rem !important;
+            color: var(--accent);
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* 當輸入框獲得焦點時，底線變深 */
+        input:focus, select:focus, textarea:focus {
+            border-bottom: 1.5px solid var(--accent) !important;
+        }
+
+        input, select, textarea {
+            width: 100% !important;
+            box-sizing: border-box; /* 確保 padding 不會增加寬度 */
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* 下拉選單箭頭微調 */
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
+            padding-right: 25px;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            background: none !important;
+        }
+
+        #submit-btn {
+            width: 100%;
+            height: 38px;           /* 高度與 input 格子完全一致 */
+            margin-top: 20px;       /* 與上方資訊隔開一行 */
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: block;         /* 確保它自己佔據一行 */
+        }
+
+        /* 讓「回上一頁修改」也靠右 */
+        .prev-link-right {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            font-size: 0.6rem;
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* 標籤小標題樣式 */
+        .form-label {
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #353569;
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="slider-container" id="slider">
+    <section class="page page-p1">
+        <div class="content-card">
+            <img src="logo.png" style="width: 80%; max-width: 200px; margin: 0 auto;" draggable="false">
+        </div>
+        <div class="nav-footer">
+            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">
+                〈 向左滑動 〉
+            </div>
+        </div>
+    </section>
+
+    <section class="page">
+        <div class="content-card">
+            <h1 style="color: #353569;font-size: 2.8rem;">關於 <span style="handwriting-elegant; font-size: 2.8rem;">Deep Coffee</span></h1>
+            <p class="chinese-handwriting" style="color: #353569; font-size: 1.8rem;">我們堅持雲端同步即時庫存，確保每一口都是新鮮。</p>
+        </div>
+        <div class="nav-footer">
+            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
+        </div>
+        
+    </section>
+
+    <section class="page page-menu">
+        <div class="content-card">
+            <h3 class="handwriting-elegant" style="margin-top:0; color: #353569; font-size: 2.8rem;">Menu</h3>
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;">
+                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日飲品')">當日飲品</button>
+                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日甜點')">當日甜點</button>
+                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('預約甜點')">預約甜點</button>
+            </div>
+            <div id="category-desc" style="font-size: 1.2rem; color: #888; margin-bottom: 15px; text-align: center; font-weight: bold;">
+                在特定時段來店取貨
+            </div>
+            <div id="product-list">載入中...</div>
+            <div class="nav-footer">
+                <div style="margin-top:15px; text-align:right; font-weight:bold; color: #353569;">
+                    購物車(<span id="count">0</span>) 總計: $<span id="total">0</span>
+                </div>
+                <button class="nav-btn" onclick="showCheckout()" style = "text-decoration: underline;">前往結帳</button>                
+            </div>
+        </div>
+    </section>
+
+    <section class="page">
+        <div class="content-card">
+            <h3 style="color:#353569;font-size: 2.8rem;">⚠️ 注意事項</h3>
+            <p class="chinese-handwriting" style = "font-size: 1.4rem;">
+            1. 如購買當日甜點，請務必記得在所選時段內取貨。 <br>
+            2. 若同時購買當日商品與預購甜點，我們將分開出貨。<br>
+            3. 訂單成立付款後 僅能換等值商品 無法退款。<br>
+            4. 如有特殊需求，歡迎於結帳頁面告知，或是私訊 deep coffee IG，<br>我們會再與您聯繫。<br><br>
+            謝謝您 <br>
+            產品皆為手工製作 不加任何防腐劑 請盡早享用。</p>
+            <button class="nav-btn" onclick="nextPage()" style = "text-decoration: underline;">我已了解</button>
+            <span class="prev-link" style = "font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
+        </div>
+    </section>
+        
+    <section class="page page-checkout">
+        <div class="content-card" style="max-width: 650px;">
+            <h3 style="margin-bottom: 15px; color: #353569;">結帳資訊</h3>
+            <div style="font-weight: bold; margin-top: 0px; margin-bottom: 5px; color: #3e2723;">請匯款至</div>
+            <div id="cart-summary" style="font-size:1rem; background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:15px;"></div>
+    
+            <div class="checkout-flex-container">
+                <div class="checkout-column">
+                    <label class="form-label">顧客姓名 / IG ID</label>
+                    <input type="text" id="user-name" placeholder="請輸入姓名或 IG ID">
+    
+                    <label class="form-label">手機號碼</label>
+                    <input type="tel" id="user-phone" placeholder="輸入手機號碼">
+    
+                    <label class="form-label">帳號後五碼</label>
+                    <input type="tel" id="account-tail" placeholder="請輸入 5 位數字" maxlength="5">
+                </div>
+    
+                <div class="checkout-column">
+                    <div id="method-container" style="display: none;">
+                        <label class="form-label">取貨方式</label>
+                        <select id="pickup-method">
+                            <option value="預約自取">預約自取</option>
+                            <option value="宅配">宅配</option>
+                        </select>
+                    </div>
+                
+                    <div id="pickup-slot-section" style="display: none;">
+                        <label class="form-label">來店自取時段 (當日飲品/甜點)</label>
+                        <select id="pickup-time" onchange="toggleSpecialNote()">
+                            <option value="上午">上午 (10:00 - 12:00)</option>
+                            <option value="下午">下午 (14:00 - 18:00)</option>
+                            <option value="特殊需求">特殊需求</option>
+                        </select>
+                        
+                        <div id="special-note-container" style="display: none; margin-top: 10px;">
+                            <label class="form-label" style="font-size: 0.8rem; color: #8d6e63;">請輸入您的特殊需求，我們會盡快與您聯繫</label>
+                            <textarea id="special-note" rows="2" placeholder="例如：預計抵達時間..." 
+                                      style="width: 100%;font-size: 0.8rem; padding: 8px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
+                        </div>
+                    </div>
+                
+                    <div id="delivery-info-section" style="display: none; margin-top: 15px;">
+                        <label class="form-label">宅配配送資訊 (預約甜點)</label>
+                        <input type="date" id="delivery-date" style="margin-bottom: 8px;">
+                        <input type="text" id="delivery-address" placeholder="請輸入完整收件地址">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="nav-footer">
+                <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style = "text-decoration: underline;">確認並提交訂單</button>
+                <span class="prev-link" style="cursor:pointer;" onclick="prevPage()">回上一頁修改</span>
+            </div>
+        </div>
+    </section>
+        
+    <section class="page">
+        <div class="content-card" style="text-align:center;">
+            <h2>訂單已確認成立並提交</h2>
+            <p>感謝您的訂購，請等候通知。</p>
+            <button class="nav-btn" onclick="location.reload()">回首頁再次點餐</button>
+            <div style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px;">
+                <p style="font-size: 0.9rem; color: #666;">更多關於我們：</p>
+                
+                <a href="您的網址" target="_blank" class="nav-btn" 
+                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
+                    Deep Coffee IG
+                </a>
+                <a href="您的網址" target="_blank" class="nav-btn" 
+                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
+                    Deep Airbnb
+                </a>
+                <a href="您的網址" target="_blank" class="nav-btn" 
+                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
+                    Abril 24 Estudio 工作室
+                </a>
+                <a href="您的網址" target="_blank" class="nav-btn" 
+                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
+                    3v.antique
+                </a>
+                
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+let startX = 0;
+let currentPage = 0;
+let cart = [];
+let products = [];
+const slider = document.getElementById('slider');
+const GAS_API = 'https://script.google.com/macros/s/AKfycbxAuM_YOnaQLaDzCfIXmsucHLfQqEzC8qfvMdlfIC9_m2yclWLIcXuaiZcihe2ZyzVg/exec'; 
+
+// --- 滑動與導覽控制 ---
+window.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
+window.addEventListener('touchend', e => {
+    let diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentPage < 2) nextPage(); 
+        if (diff < -50 && currentPage > 0) prevPage();
+    }
+}, {passive: true});
+
+window.addEventListener('mousedown', e => {
+    startX = e.clientX;
+    const handleMouseUp = (me) => {
+        let diff = startX - me.clientX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 50 && currentPage < 2) nextPage();
+            if (diff < -50 && currentPage > 0) prevPage();
+        }
+        window.removeEventListener('mouseup', handleMouseUp);
+    };
+    window.addEventListener('mouseup', handleMouseUp);
+});
+
+function nextPage() {
+    // 檢查：商品清單頁 (Index 2)
+    if (currentPage === 2) {
+        if (cart.length === 0) {
+            alert('您的購物車還是空的，請先挑選商品！');
+            return;
+        }
+        updateCheckoutSummary();
+    }
+
+    // 檢查：結帳資訊頁 (Index 4)
+    if (currentPage === 4) {
+        const phone = document.getElementById('user-phone').value;
+        const tail = document.getElementById('account-tail').value;
+        if (!phone || phone.length < 9) {
+            alert('請輸入正確的手機號碼！');
+            return;
+        }
+        if (!tail || tail.length !== 5) {
+            alert('請輸入正確的帳號後五碼！');
+            return;
+        }
+    }
+
+    if (currentPage < 5) { 
+        currentPage++; 
+        updateSlider(); 
+    }
+}
+
+function prevPage() { if (currentPage > 0) { currentPage--; updateSlider(); } }
+
+function updateSlider() {
+    slider.style.transform = `translateX(-${currentPage * (100 / 6)}%)`;
+    document.getElementById('progress').style.width = `${((currentPage + 1) / 6) * 100}%`;
+}
+
+// --- 資料處理與結帳 ---
+async function init() {
+    try {
+        const resp = await fetch(GAS_API);
+        products = await resp.json();
+        // 不要直接呼叫 renderProducts，改呼叫 renderProductsByCat 來啟動變色與說明
+        renderProductsByCat('當日飲品');
+    } catch (err) {
+        document.getElementById('product-list').innerHTML = "目前無法連線至資料庫";
+    }
+}
+
+let currentCategory = '當日飲品';
+function renderProductsByCat(cat) {
+    currentCategory = cat;
+    // 取得說明文字的區塊
+    const descDiv = document.getElementById('category-desc');
+    
+    // 根據類別名稱切換文字
+    if (cat === '預約甜點') {
+        descDiv.innerText = '僅以宅配方式送貨';
+    } else {
+        // 當日飲品 或 當日甜點
+        descDiv.innerText = '在特定時段來店取貨';
+    }
+
+    const buttons = document.querySelectorAll('.cat-btn');
+    buttons.forEach(btn => {
+        if (btn.innerText === cat) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    renderProducts(products); // 執行過濾與渲染
+}
+
+function renderProducts(data) {
+    const listDiv = document.getElementById('product-list');
+    const filteredData = data.filter(p => p.category && p.category.trim() === currentCategory);
+
+    if (filteredData.length === 0) {
+        listDiv.innerHTML = `<div style="padding:20px; color:#888;">【${currentCategory}】目前無商品</div>`;
+        return;
+    }
+
+    listDiv.innerHTML = filteredData.map((p) => {
+        const realIndex = products.findIndex(item => item.name === p.name);
+        const cartItem = cart.find(item => item.name === p.name);
+        const count = cartItem ? cartItem.qty : 0;
+        const currentAvailable = p.stock - count;
+        const out = currentAvailable <= 0;
+
+        return `
+            <div class="product">
+                <div class="product-info">
+                    <h4 style="margin:0; font-size:1.2rem;">${p.name}</h4>
+                    <small style="font-size:0.8rem; opacity:0.6;">${p.weight || ''}</small>
+                </div>
+                
+                <div class="product-price-section">
+                    <span class="stock-text" style="color:${out ? '#ff4d4d' : '#888'};">
+                        ${out ? '已售完' : '剩餘 ' + currentAvailable}
+                    </span>
+                    
+                    <div class="price-text">$${p.price}</div>
+                    
+                    <div class="qty-controls">
+                        ${count > 0 ? `
+                            <button class="qty-btn" onclick="removeFromCart(${realIndex})">−</button>
+                            <span style="font-weight:bold; min-width:20px; text-align:center; font-size:1rem;">${count}</span>
+                        ` : ''}
+                        <button class="qty-btn" onclick="addToCart(${realIndex})" ${out?'style="opacity:0.2" disabled':''}>+</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function addToCart(index) {
+    const p = products[index];
+    const item = cart.find(c => c.name === p.name);
+    
+    if(item) {
+        if(item.qty >= p.stock) return alert('庫存不足');
+        item.qty++;
+    } else {
+        cart.push({ name: p.name, price: p.price, qty: 1 });
+    }
+    
+    // 【更新】重新渲染商品列表，讓按鈕旁的數字更新
+    renderProducts(products);
+    updateUI();
+}
+
+function removeFromCart(index) {
+    const p = products[index];
+    const itemIndex = cart.findIndex(c => c.name === p.name);
+    
+    if (itemIndex > -1) {
+        if (cart[itemIndex].qty > 1) {
+            cart[itemIndex].qty--;
+        } else {
+            cart.splice(itemIndex, 1); // 數量為 1 時，直接從陣列移除
+        }
+    }
+    
+    renderProducts(products); // 重新渲染列表
+    updateUI(); // 更新總金額與數量顯示
+}
+
+function updateUI() {
+    document.getElementById('count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('total').innerText = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+}
+
+function updateCheckoutSummary() {
+    let total = document.getElementById('total').innerText;
+    let summary = cart.map(i => `${i.name} x ${i.qty}`).join("<br>");
+    document.getElementById('cart-summary').innerHTML = summary + "<hr>總計: $" + total;
+}
+
+function showCheckout() {
+    // 1. 偵測購物車內容類別
+    const categories = cart.map(item => {
+        const p = products.find(prod => prod.name === item.name);
+        return p ? p.category.trim() : "";
+    });
+
+    const hasDaily = categories.some(cat => cat === '當日飲品' || cat === '當日甜點');
+    const hasPreorder = categories.some(cat => cat === '預約甜點');
+
+    // 2. 根據類別顯示/隱藏區塊
+    document.getElementById('pickup-slot-section').style.display = hasDaily ? 'block' : 'none';
+    document.getElementById('delivery-info-section').style.display = hasPreorder ? 'block' : 'none';
+
+    // 3. 設定後台紀錄用的取貨方式
+    let methodValue = "";
+    if (hasDaily && hasPreorder) methodValue = "自取+宅配";
+    else if (hasDaily) methodValue = "預約自取";
+    else if (hasPreorder) methodValue = "預約宅配";
+    document.getElementById('pickup-method').value = methodValue;
+
+    updateCheckoutSummary();
+    nextPage();
+}
+
+// 切換顯示邏輯
+function togglePickupFields() {
+    const method = document.getElementById('pickup-method').value;
+    const selfFields = document.getElementById('self-pickup-fields');
+    const deliveryFields = document.getElementById('delivery-fields');
+    
+
+    if (method === '預約自取') {
+        selfFields.style.display = 'block';
+        deliveryFields.style.display = 'none';
+    } else {
+        selfFields.style.display = 'none';
+        deliveryFields.style.display = 'block';
+    }
+}
+
+function toggleSpecialNote() {
+    const pickupTime = document.getElementById('pickup-time').value;
+    const noteContainer = document.getElementById('special-note-container');
+    
+    // 如果選中「特殊需求」，就顯示輸入框，否則隱藏
+    if (pickupTime === '特殊需求') {
+        noteContainer.style.display = 'block';
+    } else {
+        noteContainer.style.display = 'none';
+    }
+}
+
+async function submitOrder() {
+    const name = document.getElementById('user-name').value;
+    const phone = document.getElementById('user-phone').value;
+    const accountTail = document.getElementById('account-tail').value;
+    
+    // 取得區塊顯示狀態
+    const showPickup = document.getElementById('pickup-slot-section').style.display === 'block';
+    const showDelivery = document.getElementById('delivery-info-section').style.display === 'block';
+
+    if (!name || !phone || accountTail.length !== 5) {
+        return alert('請完整填寫姓名、手機與帳號後五碼！');
+    }
+
+    let details = [];
+    
+    // 驗證自取時段 (當日商品)
+    if (showPickup) {
+    const time = document.getElementById('pickup-time').value;
+    if (time === '特殊需求') {
+        const note = document.getElementById('special-note').value;
+        if (!note) return alert('請填寫您的特殊需求細節！');
+        details.push(`自取: 特殊需求 (${note})`);
+    } else {
+        details.push(`自取時段: ${time}`);
+    }
+    }
+
+    // 驗證日期與地址 (預約商品)
+    if (showDelivery) {
+        const date = document.getElementById('delivery-date').value;
+        const addr = document.getElementById('delivery-address').value;
+        if (!date || !addr) return alert('請完整填寫宅配日期與地址！');
+        details.push(`宅配日期: ${date} / 地址: ${addr}`);
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerText = "訂單傳送中...";
+
+    const orderData = {
+        name: name,
+        phone: phone,
+        accountTail: accountTail,
+        pickupMethod: document.getElementById('pickup-method').value,
+        pickupDetail: details.join(" | "), // 合併資訊寫入試算表 I 欄
+        cart: cart,
+        totalAmount: document.getElementById('total').innerText
+    };
+
+    try {
+        const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
+        const result = await resp.json();
+        if (result.status === "Success") {
+            currentPage = 5;
+            updateSlider();
+        } else {
+            alert('系統錯誤: ' + result.message);
+            btn.disabled = false;
+            btn.innerText = "確認並提交訂單";
+        }
+    } catch (err) {
+        alert('提交失敗，請檢查網路連線');
+        btn.disabled = false;
+        btn.innerText = "確認並提交訂單";
+    }
+}
+
+init();
+updateSlider();
+</script>
+</body>
+</html>
