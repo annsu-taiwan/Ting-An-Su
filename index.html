@@ -59,6 +59,13 @@
             font-size: 1.6rem;
             letter-spacing: 1px;
         }
+        
+        /* 針對關於頁面或注意事項的長文字 */
+        .chinese-handwriting {
+            width: 100%;
+            max-width: 90%; /* 留一點左右呼吸空間 */
+            margin: 0 auto;
+        }
 
         .slider-container { 
             display: flex; width: 600%; height: 100vh; 
@@ -68,7 +75,7 @@
         }
         
         .page {
-            width: calc(100% / 6);
+            width: 100vw !important;
             height: 100vh; /* 確保佔滿全螢幕高度 */
             display: flex; 
             flex-direction: column;
@@ -78,6 +85,7 @@
             margin: 0;
             box-sizing: border-box;
             flex-shrink: 0;
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -85,7 +93,7 @@
             background: none; 
             box-shadow: none;
             padding: 0; /* 💡 移除內距，讓置中更精確 */
-            width: 100%; 
+            width: 90%; 
             max-width: 800px; 
             margin: 0 auto;
             text-align: center;
@@ -93,6 +101,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            /* 💡 核心：防止長文字撐破版面 */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .page:not(.page-p1)::before {
@@ -100,6 +111,24 @@
             z-index: -1;transform: translateY(-20px);
         }
         
+        /* 💡 讓首頁 Logo 頁達成完美垂直水平置中 */
+        .page-p1 .content-card {
+            /* 核心：自動推開上下空間，達成絕對垂直置中 */
+            margin: auto 0 !important; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+        }
+
+        /* 💡 確保首頁的 Footer 不會推擠到內容位置 */
+        .page-p1 .nav-footer {
+            margin-top: 0; 
+            position: absolute; /* 僅在首頁使用 absolute 以免影響 Logo 置中 */
+            bottom: 50px;
+        }
+
         /* =========================================
            1. Menu 頁面整體佈局 (置頂與間距縮小)
            ========================================= */
@@ -226,20 +255,23 @@
         }
 
         .nav-footer {
-            position: absolute;
-            bottom: 50px;           /* 💡 距離底部 50px，可自行調整 */
-            left: 50%;
-            transform: translateX(-50%); /* 💡 完美水平置中 */
+            /* 💡 移除原本的 position: absolute; left: 50%; transform... */
+            position: static; 
+            margin-top: auto;   /* 💡 核心：把上方內容推開，自動置底 */
+            margin-bottom: 50px; /* 距離底部的安全間距 */
+    
             width: 90%;
-            max-width: 650px;       /* 💡 配合您先前的加寬需求 */
-            text-align: center;
+            max-width: 650px;
             display: flex;
             flex-direction: column;
+            align-items: center; /* 💡 核心：確保內部的總計與按鈕水平置中 */
             gap: 10px;
+            box-sizing: border-box;
         }
 
         .nav-footer .nav-btn {
-            width: 100%;
+            width: auto !important;
+            margin: 0 auto;
         }
 
         /* 庫存文字再縮小一點點 */
@@ -463,7 +495,7 @@
         </div>
     </section>
 
-    <section class="page">
+    <section class="page page-p1">
         <div class="content-card">
             <h1 style="color: #353569;font-size: 2.8rem;">關於 <span style="handwriting-elegant; font-size: 2.8rem;">Deep Coffee</span></h1>
             <p class="chinese-handwriting" style="color: #353569; font-size: 1.8rem;">我們堅持雲端同步即時庫存，確保每一口都是新鮮。</p>
