@@ -252,6 +252,10 @@
             letter-spacing: 2px;
             cursor: pointer;
             box-shadow: none !important;
+
+            /* 💡 同步調整：改為粗體，不要底線 */
+            font-weight: bold !important;
+            box-shadow: none !important;
         }
 
         .nav-footer {
@@ -545,7 +549,7 @@
             </p>
             <p class="chinese-handwriting" style = "font-size: 1.4rem;">
             謝謝您 <br>
-            產品皆為手工製作 不加任何防腐劑 請盡早享用。</p>
+            產品皆為手工製作 不加任何防腐劑 請盡早享用。<br></p>
             <button class="nav-btn" onclick="nextPage()" style = "text-decoration: underline;">我已了解</button>
             <span class="prev-link" style = "font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
         </div>
@@ -603,7 +607,7 @@
     
             <div class="nav-footer">
                 <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style = "text-decoration: underline;">確認並提交訂單</button>
-                <span class="prev-link" style="cursor:pointer;" onclick="prevPage()">回上一頁修改</span>
+                <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">回上一頁修改</span>
             </div>
         </div>
     </section>
