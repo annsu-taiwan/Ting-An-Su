@@ -351,6 +351,28 @@
             h1 { font-size: 1.8rem; }
             h3 { font-size: 1.5rem; }
 
+            /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
+            .page:nth-of-type(4) h3 {
+                font-size: 1.8rem !important;
+                margin-bottom: 20px !important;
+            }
+
+            /* 💡 2. 調整列表文字排列：稍微縮小字級並增加行距 */
+            .page:nth-of-type(4) .chinese-handwriting {
+                font-size: 1.15rem !important; /* 稍微縮小，避免換行雜亂 */
+                line-height: 1.8 !important;   /* 增加行距，提升閱讀舒適度 */
+                text-align: left !important;
+                padding: 0 5px !important;      /* 增加左右緩衝 */
+           }
+
+            /* 💡 3. 調整底部的連結文字 */
+            .page:nth-of-type(4) .prev-link {
+                font-size: 0.85rem !important;
+                opacity: 0.6;                  /* 讓「返回」按鈕低調一點 */
+                margin-top: 15px !important;
+                display: block;
+            }
+
             /* 2. 縮小分類按鈕 (當日飲品/甜點等) */
             .cat-btn {
                 /* 將原本的 1.4rem 縮小，例如改為 1.1rem，避免按鈕擠在一起 */
@@ -361,8 +383,21 @@
             .checkout-column {
                 min-width: 100%; /* 強制手機版佔滿全寬 */
             }
+
+            /* 💡 4. 放大填資料項目的「小標題」 */
+            .form-label {
+                font-size: 1.1rem !important;
+                margin-bottom: 5px !important;
+            }
+
+            /* 💡 5. 放大輸入框內填寫的文字與內容 */
+            input, select, textarea {
+                font-size: 1.25rem !important; /* 放大字體方便閱讀與修改 */
+                padding: 12px 0 !important;   /* 增加高度，方便手指點選 */
+            }
     
             #cart-summary {
+                font-size: 1.1rem !important;
                 padding: 10px !important; /* 縮小購物清單內距 */
             }
 
