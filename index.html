@@ -226,7 +226,7 @@
             /* 💡 如果字真的太長，允許在單詞內換行，不要撐破框框 */
             overflow-wrap: break-word; 
             word-wrap: break-word;
-            font-size: 1.1rem;      /* 手機版微調商品名稱大小 */
+            font-size: 1.3rem;      /* 手機版微調商品名稱大小 */
         }
 
         /* =========================================
@@ -247,7 +247,7 @@
             background: none !important;
             border: none !important;
             color: var(--accent) !important;
-            font-size: 1.2rem !important;
+            font-size: 1.6rem !important;
             padding: 10px 0 !important;
             letter-spacing: 2px;
             cursor: pointer;
@@ -276,13 +276,13 @@
 
         /* 庫存文字再縮小一點點 */
         .stock-text {
-            font-size: 0.8rem !important;
+            font-size: 1.1rem !important;
             margin-bottom: -2px !important; /* 稍微往下拉近與價格的距離 */
         }
 
         /* 價格字體大小維持，但移除間距 */
         .price-text {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: bold;
         }
 
@@ -294,7 +294,7 @@
             border: none !important;
             padding: 5px 10px !important;
             cursor: pointer;
-            font-size: 1.4rem !important;
+            font-size: 1.6rem !important;
             color: #9090b7; /* 未選中時的顏色 */
             transition: color 0.3s;
             box-shadow: none !important;
@@ -508,7 +508,7 @@
 
     <section class="page page-menu">
         <div class="content-card">
-            <h3 class="handwriting-elegant" style="margin-top:0; color: #353569; font-size: 2.8rem;">Menu</h3>
+            <h3 class="handwriting-elegant" style="margin-top:0; color: #353569; font-size: 3.2rem;">Menu</h3>
             <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;">
                 <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日飲品')">當日飲品</button>
                 <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日甜點')">當日甜點</button>
@@ -519,7 +519,7 @@
             </div>
             <div id="product-list">載入中...</div>
             <div class="nav-footer">
-                <div style="margin-top:15px; text-align:right; font-weight:bold; color: #353569;">
+                <div style="margin-top:15px; text-align:right; font-weight:bold; font-size:1.2rem; color: #353569;">
                     購物車(<span id="count">0</span>) 總計: $<span id="total">0</span>
                 </div>
                 <button class="nav-btn" onclick="showCheckout()" style = "text-decoration: underline;">前往結帳</button>                
@@ -756,8 +756,7 @@ function renderProducts(data) {
         return `
             <div class="product">
                 <div class="product-info">
-                    <h4 style="margin:0; font-size:1.2rem;">${p.name}</h4>
-                    <small style="font-size:0.8rem; opacity:0.6;">${p.weight || ''}</small>
+                    <h4 style="margin:0; font-size:1.6rem;">${p.name}</h4>
                 </div>
                 
                 <div class="product-price-section">
