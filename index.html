@@ -68,7 +68,7 @@
         }
 
         .slider-container { 
-            display: flex; width: 600%; height: 100vh; 
+            display: flex; width: 700%; height: 100vh; 
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
             touch-action: pan-y; margin: 0;  /* 💡 確保沒有外邊距 */
             padding: 0; /* 💡 確保沒有內邊距 */;
@@ -447,6 +447,36 @@
             color: #353569;
         }
 
+        /* 💡 成功頁面專屬：確保完美置中 */
+        .page-success .content-card {
+            margin: auto 0 !important; /* 強制垂直置中 */
+            padding: 20px;
+        }
+
+        /* 社交連結區域的邊框線 */
+        .success-footer-links {
+            width: 100%;
+            max-width: 400px;
+            border-top: 1px solid rgba(53, 53, 105, 0.1);
+            padding-top: 25px;
+        }
+
+        /* 社交連結按鈕：改為半透明背景或底線感，避免太厚重 */
+        .social-link {
+            display: block;
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 1.4rem;
+            padding: 8px 0;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(53, 53, 105, 0.05); /* 輕微底線區隔 */
+            transition: opacity 0.3s;
+        }
+
+        .social-link:hover {
+            opacity: 0.6;
+        }
+
         /* 💡 針對手機版 (螢幕寬度 600px 以下) 的微調 */
         @media (max-width: 600px) {
             html {
@@ -530,6 +560,15 @@
                 padding-left: 0;
                 padding-right: 0;
             }
+
+            .page-success {
+                justify-content: center !important; 
+                padding-bottom: 30px !important; /* 讓底部留白縮小 */
+            }
+    
+            .page-success h3 {
+                font-size: 1.8rem !important;
+            }
         }
     </style>
 </head>
@@ -551,13 +590,32 @@
 
     <section class="page page-p1">
         <div class="content-card">
-            <h1 style="color: #353569;font-size: 2.8rem;">關於 <span style="handwriting-elegant; font-size: 2.8rem;">Deep Coffee</span></h1>
-            <p class="chinese-handwriting" style="color: #353569; font-size: 1.8rem;">我們堅持雲端同步即時庫存，確保每一口都是新鮮。</p>
+            <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
+            <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
+                收起10年店面營業後 偶爾還是會想滿足那種玩弄滋味的樂趣<br>
+                挑選各式在地有趣的食材 不定期限時限量開單<br><br>
+                少了一點面對面的熟絡 但是記憶中溫暖的滋味 仍然那樣
+            </p>
         </div>
         <div class="nav-footer">
             <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
+        </div>        
+    </section>
+
+    <section class="page">
+        <div class="content-card">
+            <h3 style="color: #353569;font-size: 2.8rem;">購物須知</h3>
+            <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto;">
+                1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
+                2. 若購買當日商品，將選取時段來店取貨。<br>
+                &emsp;&emsp;&emsp;店取地址：<strong>台東縣台東市錦州街51號</strong><br>
+                &emsp;&emsp;&emsp;時段有以下選擇：<br>
+                3. 若購買預定商品，需至少3-5個工作天，並固定以宅配方式運送。
+            </p>
         </div>
-        
+        <div class="nav-footer">
+            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
+        </div>        
     </section>
 
     <section class="page page-menu">
@@ -584,11 +642,11 @@
     <section class="page">
         <div class="content-card">
             <h3 style="color:#353569;font-size: 2.8rem;">⚠️ 注意事項</h3>
-            <p class="chinese-handwriting" style = "font-size: 1.4rem; text-align: left;">
-            1. 如購買當日甜點，請務必記得在所選時段內取貨。 <br>
-            2. 若同時購買當日商品與預購甜點，我們將分開出貨。<br>
-            3. 訂單成立付款後 僅能換等值商品 無法退款。<br>
-            4. 如有特殊需求，歡迎於結帳頁面告知，或是私訊 deep coffee IG。<br><br>
+            <p class="chinese-handwriting" style = "font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto;">
+            1. 如購買當日商品，請務必記得在所選時段內取貨。 <br>
+            2. 如購買預定商品，請務必在填寫資訊後，私訊我們！<br>
+            3. 商品付款後 僅能換等值商品 無法退款。<br>
+            4. 如有特殊需求，歡迎於結帳頁面告知，並私訊 deep coffee IG。<br><br>
             </p>
             <p class="chinese-handwriting" style = "font-size: 1.4rem;">
             謝謝您 <br>
@@ -597,7 +655,7 @@
             <span class="prev-link" style = "font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
         </div>
     </section>
-        
+
     <section class="page page-checkout">
         <div class="content-card" style="max-width: 650px;">
             <h3 style="margin-bottom: 10px; font-size: 1.8rem; color: #353569;">結帳資訊</h3>
@@ -612,74 +670,72 @@
                     <label class="form-label">手機號碼</label>
                     <input type="tel" id="user-phone" placeholder="輸入手機號碼">
     
-                    <label class="form-label">帳號後五碼</label>
-                    <input type="tel" id="account-tail" placeholder="請輸入 5 位數字" maxlength="5">
+                    <div id="account-tail-section">
+                        <label class="form-label">帳號後五碼</label>
+                        <input type="tel" id="account-tail" placeholder="請輸入 5 位數字" maxlength="5">
+                    </div>
                 </div>
     
                 <div class="checkout-column">
-                    <div id="method-container" style="display: none;">
-                        <label class="form-label">取貨方式</label>
-                        <select id="pickup-method">
-                            <option value="預約自取">預約自取</option>
+                    <div id="preorder-method-section" style="display: none;">
+                        <label class="form-label">領取方式</label>
+                        <select id="preorder-type" onchange="togglePreorderFields()">
                             <option value="宅配">宅配</option>
+                            <option value="面交">面交取貨</option>
                         </select>
                     </div>
                 
                     <div id="pickup-slot-section" style="display: none;">
-                        <label class="form-label">自取時段 (當日飲品/甜點)</label>
-                        <select id="pickup-time" onchange="toggleSpecialNote()">
-                            <option value="上午">上午 (10:00 - 12:00)</option>
-                            <option value="下午">下午 (14:00 - 18:00)</option>
-                            <option value="特殊需求">特殊需求</option>
-                        </select>
-                        
-                        <div id="special-note-container" style="display: none; margin-top: 10px;">
-                            <label class="form-label" style="font-size: 1.0rem; color: #353569;">請輸入您的特殊需求，<br>我們會盡快與您聯繫！</label>
-                            <textarea id="special-note" rows="2" placeholder="例如：預計抵達時間..." 
-                                      style="width: 100%;font-size: 1.0rem; padding: 8px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
-                        </div>
+                        <label class="form-label">自取時段</label>
+                        <select id="pickup-time">
+                            <option value="下午 1:00 - 2:00">13:00 - 14:00</option>
+                            <option value="下午 2:00 - 3:00">14:00 - 15:00</option>
+                        </select>                                            
                     </div>
                 
                     <div id="delivery-info-section" style="display: none; margin-top: 15px;">
-                        <label class="form-label">宅配配送資訊 (預約甜點)</label>
+                        <label id="date-label" class="form-label">預計取貨日期</label>
                         <input type="date" id="delivery-date" style="margin-bottom: 8px;">
                         <input type="text" id="delivery-address" placeholder="請輸入完整收件地址">
+                    </div>
+    
+                    <input type="hidden" id="pickup-method">
+    
+                    <div id="special-note-container" style="margin-top: 10px;">
+                        <label class="form-label" style="font-size: 1.0rem; color: #353569;">特殊需求 (選填)</label>
+                        <textarea id="special-note" rows="2" placeholder="請輸入您的需求，&#10;並私訊我們的 IG ！"></textarea>
                     </div>
                 </div>
             </div>
     
             <div class="nav-footer">
-                <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style = "text-decoration: underline;">確認並提交訂單</button>
+                <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style="text-decoration: underline;">確認並提交訂單</button>
                 <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">回上一頁修改</span>
             </div>
         </div>
     </section>
-        
-    <section class="page">
-        <div class="content-card" style="text-align:center;">
-            <h3>訂單已確認成立並提交</h3>
-            <p>感謝您的訂購，請等候通知。</p>
-            <button class="nav-btn" onclick="location.reload()">回首頁再次點餐</button>
-            <div style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px;">
-                <p style="font-size: 1.2rem; color: #353569;">更多關於我們：</p>
+    
+    <section class="page page-success">
+        <div class="content-card">
+            <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
+            <p id="success-msg" class="chinese-handwriting" style="font-size: 1.6rem; margin-bottom: 20px;">
+                感謝您的訂購，請等候通知。
+            </p>
+            
+            <div class="success-footer-links">
+                <p style="font-size: 1.4rem; color: #353569; margin-bottom: 15px;">
+                    除了除了甜點、咖啡之外，下面還有我們的bnb住宿以及選物空間，<br>
+                    有機會歡迎來台東找我們玩喔！
+                </p>
                 
-                <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="nav-btn" 
-                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
-                    Deep Coffee IG
-                </a>
-                <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="nav-btn" 
-                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
-                    Deep Airbnb IG
-                </a>
-                <a href="https://www.instagram.com/abril24_estudio?igsh=dGR6NzUzZGMxZmpi" target="_blank" class="nav-btn" 
-                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
-                    Abril 24 Estudio 工作室 IG
-                </a>
-                <a href="https://www.instagram.com/3v.antique?igsh=dHg2ZHEyNHR0dDFo" target="_blank" class="nav-btn" 
-                   style="display: block; text-decoration: none; background: var(--accent); margin-bottom: 10px;">
-                    3v.antique IG
-                </a>
-                
+                <div class="social-grid">
+                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
+                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
+                </div>
+
+                <button class="nav-btn" onclick="location.reload()" style="text-decoration: underline !important; margin-bottom: 40px;">
+                    回首頁再次點餐
+                </button>
             </div>
         </div>
     </section>
@@ -698,7 +754,7 @@ window.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {
 window.addEventListener('touchend', e => {
     let diff = startX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-        if (diff > 0 && currentPage < 2) nextPage(); 
+        if (diff > 0 && currentPage < 3) nextPage(); 
         if (diff < -50 && currentPage > 0) prevPage();
     }
 }, {passive: true});
@@ -708,7 +764,7 @@ window.addEventListener('mousedown', e => {
     const handleMouseUp = (me) => {
         let diff = startX - me.clientX;
         if (Math.abs(diff) > 50) {
-            if (diff > 50 && currentPage < 2) nextPage();
+            if (diff > 50 && currentPage < 3) nextPage();
             if (diff < -50 && currentPage > 0) prevPage();
         }
         window.removeEventListener('mouseup', handleMouseUp);
@@ -718,7 +774,7 @@ window.addEventListener('mousedown', e => {
 
 function nextPage() {
     // 檢查：商品清單頁 (Index 2)
-    if (currentPage === 2) {
+    if (currentPage === 3) {
         if (cart.length === 0) {
             alert('您的購物車還是空的，請先挑選商品！');
             return;
@@ -727,7 +783,7 @@ function nextPage() {
     }
 
     // 檢查：結帳資訊頁 (Index 4)
-    if (currentPage === 4) {
+    if (currentPage === 5) {
         const phone = document.getElementById('user-phone').value;
         const tail = document.getElementById('account-tail').value;
         if (!phone || phone.length < 9) {
@@ -740,7 +796,7 @@ function nextPage() {
         }
     }
 
-    if (currentPage < 5) { 
+    if (currentPage < 6) { 
         currentPage++; 
         updateSlider(); 
     }
@@ -749,8 +805,8 @@ function nextPage() {
 function prevPage() { if (currentPage > 0) { currentPage--; updateSlider(); } }
 
 function updateSlider() {
-    slider.style.transform = `translateX(-${currentPage * (100 / 6)}%)`;
-    document.getElementById('progress').style.width = `${((currentPage + 1) / 6) * 100}%`;
+    slider.style.transform = `translateX(-${currentPage * (100 / 7)}%)`;
+    document.getElementById('progress').style.width = `${((currentPage + 1) / 7) * 100}%`;
 }
 
 // --- 資料處理與結帳 ---
@@ -773,7 +829,7 @@ function renderProductsByCat(cat) {
     
     // 根據類別名稱切換文字
     if (cat === '預約甜點') {
-        descDiv.innerText = '僅以宅配方式送貨';
+        descDiv.innerText = '請私訊 IG 完成預訂';
     } else {
         // 當日飲品 或 當日甜點
         descDiv.innerText = '在特定時段來店取貨';
@@ -886,15 +942,50 @@ function showCheckout() {
     const hasDaily = categories.some(cat => cat === '當日飲品' || cat === '當日甜點');
     const hasPreorder = categories.some(cat => cat === '預約甜點');
 
+    // 💡 核心邏輯：若同時存在，提醒分開下單
+    if (hasDaily && hasPreorder) {
+        alert("溫馨提示：當日商品與預約商品需分開下單，請調整購物車內容，謝謝您！");
+        return;
+    }
+
     // 2. 根據類別顯示/隱藏區塊
+    // 重設欄位顯示
+    document.getElementById('account-tail-section').style.display = hasDaily ? 'block' : 'none';
     document.getElementById('pickup-slot-section').style.display = hasDaily ? 'block' : 'none';
+    document.getElementById('preorder-method-section').style.display = hasPreorder ? 'block' : 'none';
     document.getElementById('delivery-info-section').style.display = hasPreorder ? 'block' : 'none';
+
+    if (hasPreorder) {
+        // 💡 1. 強制設定選單預設為「宅配」
+        document.getElementById('preorder-type').value = "宅配";
+        
+        // 💡 2. 立即執行切換函式，確保地址欄位顯示、時段選單隱藏
+        togglePreorderFields();
+
+        // 3. 設定 3 天後的日期限制邏輯
+        const today = new Date();
+        today.setDate(today.getDate() + 3); // 今天加 3 天
+        
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // 月份補零
+        const dd = String(today.getDate()).padStart(2, '0');      // 日期補零
+        
+        const minDate = `${yyyy}-${mm}-${dd}`;
+        const dateInput = document.getElementById('delivery-date');
+        
+        dateInput.min = minDate;   // 設定最小值，防止選取太早的日期
+        dateInput.value = minDate; // 預設直接選中該日期，省去顧客操作
+    }
+
+    // 3. 特殊需求欄位：永遠強制顯示
+    document.getElementById('special-note-container').style.display = 'block';
 
     // 3. 設定後台紀錄用的取貨方式
     let methodValue = "";
-    if (hasDaily && hasPreorder) methodValue = "自取+宅配";
-    else if (hasDaily) methodValue = "預約自取";
-    else if (hasPreorder) methodValue = "預約宅配";
+    if (hasDaily) methodValue = "預約自取";
+    else if (hasPreorder) methodValue = document.getElementById('preorder-type').value;
+
+    // 確保 pickup-method 這個隱藏欄位有拿到值，後台才收得到
     document.getElementById('pickup-method').value = methodValue;
 
     updateCheckoutSummary();
@@ -902,78 +993,102 @@ function showCheckout() {
 }
 
 // 切換顯示邏輯
-function togglePickupFields() {
-    const method = document.getElementById('pickup-method').value;
-    const selfFields = document.getElementById('self-pickup-fields');
-    const deliveryFields = document.getElementById('delivery-fields');
-    
+function togglePreorderFields() {
+    const type = document.getElementById('preorder-type').value;
+    const addrInput = document.getElementById('delivery-address');
+    const dateLabel = document.getElementById('date-label');
 
-    if (method === '預約自取') {
-        selfFields.style.display = 'block';
-        deliveryFields.style.display = 'none';
+    if (type === '面交') {
+        // 💡 修正：隱藏地址欄位，並清空可能的舊資料
+        addrInput.style.display = 'none';
+        addrInput.value = ""; 
+        dateLabel.innerText = "取貨日期";
     } else {
-        selfFields.style.display = 'none';
-        deliveryFields.style.display = 'block';
+        // 💡 修正：顯示地址欄位
+        addrInput.style.display = 'block';
+        dateLabel.innerText = "預計到貨日期";
     }
 }
 
 function toggleSpecialNote() {
     const pickupTime = document.getElementById('pickup-time').value;
     const noteContainer = document.getElementById('special-note-container');
-    
-    // 如果選中「特殊需求」，就顯示輸入框，否則隱藏
-    if (pickupTime === '特殊需求') {
-        noteContainer.style.display = 'block';
-    } else {
-        noteContainer.style.display = 'none';
-    }
+    const note = document.getElementById('special-note').value.trim();
 }
 
 async function submitOrder() {
     const name = document.getElementById('user-name').value;
     const phone = document.getElementById('user-phone').value;
-    const accountTail = document.getElementById('account-tail').value;
-    
-    // 取得區塊顯示狀態
-    const showPickup = document.getElementById('pickup-slot-section').style.display === 'block';
-    const showDelivery = document.getElementById('delivery-info-section').style.display === 'block';
+    const tail = document.getElementById('account-tail').value;
+    const note = document.getElementById('special-note').value.trim();
 
-    if (!name || !phone || accountTail.length !== 5) {
-        return alert('請完整填寫姓名、手機與帳號後五碼！');
+    // 取得當前類別
+    const isDailyOrder = document.getElementById('account-tail-section').style.display === 'block';
+
+    // 💡 驗證：當日商品才需要後五碼
+    if (!name || !phone || (isDailyOrder && tail.length !== 5)) {
+        return alert(isDailyOrder ? '請完整填寫姓名、手機與帳號後五碼！' : '請填寫姓名與手機！');
     }
 
     let details = [];
-    
-    // 驗證自取時段 (當日商品)
-    if (showPickup) {
-    const time = document.getElementById('pickup-time').value;
-    if (time === '特殊需求') {
-        const note = document.getElementById('special-note').value;
-        if (!note) return alert('請填寫您的特殊需求細節！');
-        details.push(`自取: 特殊需求 (${note})`);
-    } else {
-        details.push(`自取時段: ${time}`);
-    }
-    }
+    let methodValue = "";
 
-    // 驗證日期與地址 (預約商品)
-    if (showDelivery) {
+    if (isDailyOrder) {
+        methodValue = "預約自取";
+        details.push(`自取時段: ${document.getElementById('pickup-time').value}`);
+    } else {
+        const preType = document.getElementById('preorder-type').value;
         const date = document.getElementById('delivery-date').value;
         const addr = document.getElementById('delivery-address').value;
-        if (!date || !addr) return alert('請完整填寫宅配日期與地址！');
-        details.push(`宅配日期: ${date} / 地址: ${addr}`);
+
+        // 💡 邏輯修正：如果是「宅配」才檢查地址
+        if (preType === '宅配') {
+            if (!date || !addr) return alert('請完整填寫預計到貨日期與地址！');
+            details.push(`宅配日期: ${date}\n地址: ${addr}`);
+        } else {
+            // 如果是「面交」，只檢查日期
+            if (!date) return alert('請選擇取貨日期！');
+            details.push(`面交日期: ${date}`);
+        }
+        methodValue = preType;
+    }
+
+    // 💡 3. 核心變更：若有特殊需求，特別標出並加入清單
+    if (note !== "") {
+        methodValue = "★" + methodValue; // 在開頭加上星號
+        details.push(`★ 特殊需求: ${note}`);
     }
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.innerText = "訂單傳送中...";
 
+    // 💡 1. 準備訊息所需的資料
+    const categories = cart.map(item => {
+        const p = products.find(prod => prod.name === item.name);
+        return p ? p.category.trim() : "";
+    });
+    const hasDaily = categories.some(cat => cat === '當日飲品' || cat === '當日甜點');
+    const hasPreorder = categories.some(cat => cat === '預約甜點');
+
+    const time = document.getElementById('pickup-time').value;
+    const date = document.getElementById('delivery-date').value;
+    const address = "台東縣台東市錦州街51號"; // 💡 請在此替換成實際取貨地址
+
+    // 💡 2. 根據條件生成對應訊息
+    let dynamicMsg = "感謝您的訂購，請等候通知。";
+    if (isDailyOrder) {
+        dynamicMsg = `感謝您的訂購！<br>請記得於${time}至${address}取貨！`;
+    } else if (hasPreorder) {
+        dynamicMsg = `感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong>，<br>待確認訂單後再進行付款，謝謝您！`;
+    }
+
     const orderData = {
         name: name,
         phone: phone,
         accountTail: accountTail,
-        pickupMethod: document.getElementById('pickup-method').value,
-        pickupDetail: details.join(" | "), // 合併資訊寫入試算表 I 欄
+        pickupMethod: methodValue,
+        pickupDetail: details.join("\n\n"), // 合併資訊寫入試算表 I 欄
         cart: cart,
         totalAmount: document.getElementById('total').innerText
     };
@@ -982,7 +1097,8 @@ async function submitOrder() {
         const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
         const result = await resp.json();
         if (result.status === "Success") {
-            currentPage = 5;
+            document.getElementById('success-msg').innerHTML = dynamicMsg;
+            currentPage = 6;
             updateSlider();
         } else {
             alert('系統錯誤: ' + result.message);
