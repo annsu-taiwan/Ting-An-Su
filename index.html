@@ -1224,6 +1224,17 @@ function showCheckout() {
     // 3. 特殊需求欄位：永遠強制顯示
     document.getElementById('special-note-container').style.display = 'block';
 
+    const noteInput = document.getElementById('special-note');
+
+    // 3. 根據類別更新提示文字
+    if (hasDaily) {
+        // 當日商品的提示
+        noteInput.placeholder = "如果取貨時間需要協調，\n請私訊我們的 IG～";
+    } else {
+        // 預訂商品的提示
+        noteInput.placeholder = "請輸入您的需求，\n並私訊我們的 IG ！";
+    }
+
     // 3. 設定後台紀錄用的取貨方式
     let methodValue = "";
     if (hasDaily) methodValue = "預約自取";
