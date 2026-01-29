@@ -477,8 +477,26 @@
             opacity: 0.6;
         }
 
+        .mobile-only-content {
+            display: none !important;
+        }
+
+        .desktop-only-content {
+            display: block !important;
+        }
+
         /* 💡 針對手機版 (螢幕寬度 600px 以下) 的微調 */
         @media (max-width: 600px) {
+            .desktop-only-content {
+                display: none !important; /* 隱藏電腦版 */
+            }
+            .mobile-only-content {
+                display: block !important; /* 顯示手機版 */
+                width: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
             html {
                 /* 將基礎字級從 20px 調降至 16px 或 17px */
                 font-size: 16px; 
@@ -589,7 +607,7 @@
     </section>
 
     <section class="page page-p1">
-        <div class="content-card">
+        <div class="content-card desktop-only-content mobile-only-content">
             <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
             <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
                 收起10年店面營業後 偶爾還是會想滿足那種玩弄滋味的樂趣<br>
@@ -597,6 +615,19 @@
                 少了一點面對面的熟絡 但是記憶中溫暖的滋味 仍然那樣
             </p>
         </div>
+
+        <div class="content-card mobile-only-content">
+            <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
+            <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
+                收起10年店面營業後<br>
+                偶爾還是會想滿足那種玩弄滋味的樂趣<br><br>
+                挑選各式在地有趣的食材<br>
+                不定期限時限量開單<br><br><br>
+                少了一點面對面的熟絡<br>
+                但是記憶中溫暖的滋味 仍然那樣
+            </p>
+        </div>
+        
         <div class="nav-footer">
             <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
         </div>        
