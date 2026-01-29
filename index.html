@@ -129,6 +129,74 @@
             bottom: 50px;
         }
 
+/* ✅ 1. 基礎顯示控制 (最重要：移除 inline style 的干擾) */
+.mobile-only-content { display: none !important; }
+.desktop-only-content { display: flex !important; flex-direction: column; }
+
+/* ✅ 2. 購物須知頁面整體高度控制 */
+.page-guide {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    justify-content: flex-start !important;
+    padding-top: 5vh !important;
+    overflow: hidden !important;
+}
+
+/* ✅ 3. 內容卡片：設定權重確保切換正常 */
+.page-guide .content-card {
+    height: auto !important;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: visible !important;
+    align-items: center;
+}
+
+/* ✅ 4. 捲動區域：確保文字可以滑動且不壓到 Footer */
+.guide-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    text-align: left;
+    padding: 10px 0;
+    margin: 0 !important;
+}
+
+
+
+/* ✅ 〈向左滑動〉固定在文字正下方、置中 */
+.page-guide .guide-footer{
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 12px 0 50px;
+}
+
+        /* 💡 選中時的顏色：深藍色 */
+        .guide-btn.active {
+            color: #353569 !important; /* 與標題同色 */
+            font-weight: bold !important;
+        }
+
+        /* 防止內容切換時晃動 */
+        #guide-content {
+            display: block;
+            overflow: hidden;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        /* 購物須知：固定標題與 tabs，內容自己捲動 */
+
+        .page-guide .guide-title,
+        .page-guide .guide-tabs {
+         flex: 0 0 auto;
+        }
+
         /* =========================================
            1. Menu 頁面整體佈局 (置頂與間距縮小)
            ========================================= */
@@ -310,6 +378,17 @@
             font-weight: bold;
         }
         
+        /* ✅ 購物須知 tabs：強制覆蓋 nav-btn 的顏色 */
+        .page-guide .guide-tabs .guide-btn {
+          color: #9898ba !important;   /* 未選中：淡色 */
+          font-weight: normal !important;
+        }
+
+        .page-guide .guide-tabs .guide-btn.active {
+          color: #353569 !important;   /* 選中：深色 */
+          font-weight: bold !important;
+        }
+
         .page-checkout {
             /* 核心：從頂部開始排列，不再居中 */
             justify-content: flex-start !important; 
@@ -477,25 +556,8 @@
             opacity: 0.6;
         }
 
-        .mobile-only-content {
-            display: none !important;
-        }
-
-        .desktop-only-content {
-            display: block !important;
-        }
-
         /* 💡 針對手機版 (螢幕寬度 600px 以下) 的微調 */
         @media (max-width: 600px) {
-            .desktop-only-content {
-                display: none !important; /* 隱藏電腦版 */
-            }
-            .mobile-only-content {
-                display: block !important; /* 顯示手機版 */
-                width: 100%;
-                padding: 20px;
-                box-sizing: border-box;
-            }
 
             html {
                 /* 將基礎字級從 20px 調降至 16px 或 17px */
@@ -508,6 +570,19 @@
             /* 針對標題再縮小一點點，避免換行 */
             h1 { font-size: 1.8rem; }
             h3 { font-size: 1.5rem; }
+
+            .desktop-only-content {
+        display: none !important; /* 💡 確保電腦版完全消失 */
+    }
+    .mobile-only-content {
+        display: flex !important; /* 💡 手機版改為 flex 排列 */
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .guide-body {
+        font-size: 1.15rem !important; /* 稍微調小文字避免過長 */
+    }
 
             /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
             .page:nth-of-type(4) h3 {
@@ -633,30 +708,51 @@
         </div>        
     </section>
 
-    <section class="page">
+    <section class="page page-guide">
         <div class="content-card desktop-only-content">
-            <h3 style="color: #353569;font-size: 2.8rem;">購物須知</h3>
-            <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto;">
+            <h3 class="guide-title" style="color:#353569; font-size:2.8rem; margin:0 0 0px 0;">購物須知</h3>
+            
+            <div style="font-size: 1.2rem; color: #888; text-align: center;">
+                若同時訂購當日商品與預訂商品，請分開下單～
+            </div>
+
+            <div class="guide-tabs" style="display:flex; justify-content:center; gap:40px; margin-bottom:40px; height:10px;">
+                <button class="nav-btn guide-btn guide-btn-desktop" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
+                <button class="nav-btn guide-btn guide-btn-desktop" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
+            </div>
+
+            <div id="guide-content-desktop" class="guide-body chinese-handwriting"
+                style="color:#353569; font-size:1.3rem; text-align:left; width:fit-content; max-width:95%; margin:0 auto; line-height:1.5;">
                 1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
-                2. 若購買當日商品，將選取時段來店取貨。<br>
-                &emsp;&emsp;&emsp;店取地址：<strong>台東縣台東市錦州街51號</strong><br>
-                &emsp;&emsp;&emsp;時段有以下選擇：<br>
-                3. 若購買預定商品，需至少3-5個工作天，並固定以宅配方式運送。
-            </p>
+                2. 當日商品請於選定時段內至特定地點取貨。<br>
+                &emsp;&emsp;&emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+                &emsp;&emsp;&emsp;時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+                3. 訂單成立付款後，僅能更換等值商品，無法退款。
+            </div>
         </div>
 
         <div class="content-card mobile-only-content">
-            <h3 style="color: #353569;font-size: 2.2rem;">購物須知</h3>
-            <p class="chinese-handwriting" style="color: #353569; font-size: 1.2rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto;">
-                1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
-                2. 若購買當日商品，將選取時段來店取貨。<br>
-                • 店取地址：<strong>台東縣台東市錦州街51號</strong><br>
-                • 時段有以下選擇：<br>
-                3. 若購買預定商品，需至少3-5個工作天，並固定以宅配方式運送。
-            </p>
-        </div>
+            <h3 class="guide-title" style="color:#353569; font-size:2.2rem; margin:0 0 15px 0;">購物須知</h3>
+            
+            <div style="font-size: 1.2rem; color: #888; text-align: center;">
+                若同時訂購當日商品與預訂商品，請分開下單～
+            </div>
 
-        <div class="nav-footer">
+            <div class="guide-tabs" style="display:flex; justify-content:center; gap:15px; margin-bottom:20px; height:40px;">
+                <button class="nav-btn guide-btn guide-btn-mobile" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
+                <button class="nav-btn guide-btn guide-btn-mobile" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
+            </div>
+
+            <div id="guide-content-mobile" class="guide-body chinese-handwriting"
+                style="color:#353569; font-size:1.2rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto;">
+                1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
+                2. 當日商品請於選定時段內至特定地點取貨。<br>
+                • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+                • 時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+                3. 訂單成立付款後，僅能更換等值商品，無法退款。
+            </div>
+        </div>
+        <div class="guide-footer">
             <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
         </div>        
     </section>
@@ -667,7 +763,7 @@
             <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;">
                 <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日飲品')">當日飲品</button>
                 <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日甜點')">當日甜點</button>
-                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('預約甜點')">預約甜點</button>
+                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('預約甜點')">預訂商品</button>
             </div>
             <div id="category-desc" style="font-size: 1.2rem; color: #888; margin-bottom: 15px; text-align: center; font-weight: bold;">
                 在特定時段來店取貨
@@ -850,6 +946,86 @@ function prevPage() { if (currentPage > 0) { currentPage--; updateSlider(); } }
 function updateSlider() {
     slider.style.transform = `translateX(-${currentPage * (100 / 7)}%)`;
     document.getElementById('progress').style.width = `${((currentPage + 1) / 7) * 100}%`;
+    if (currentPage === 2) {
+    showGuide('daily');
+  }
+}
+
+function showGuide(type) {
+  const contentDesktop = document.getElementById('guide-content-desktop');
+  const contentMobile  = document.getElementById('guide-content-mobile');
+
+  const btnsDesktop = document.querySelectorAll('.guide-btn-desktop');
+  const btnsMobile  = document.querySelectorAll('.guide-btn-mobile');
+
+  // 設定按鈕 active
+  function setActive(btns) {
+    btns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.guide === type);
+    });
+  }
+  setActive(btnsDesktop);
+  setActive(btnsMobile);
+
+  const dailyHtmlDesktop = `
+    1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
+    2. 當日商品請於選定時段內至特定地點取貨。<br>
+    &emsp;&emsp;&emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+    &emsp;&emsp;&emsp;時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+    3. 訂單成立付款後，僅能更換等值商品，無法退款。
+  `;
+
+  const preorderHtmlDesktop = `
+    1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
+    2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
+    3. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
+    &emsp;&emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
+    &emsp;&emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
+    &emsp;&emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
+    &emsp;&emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
+    4. 若需客製或急單需加收$200~$500不等費用（依製作時間），內容請私訊討論。<br>
+    5. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
+    6. 食品不適用七天猶豫期，恕不退換貨。如下單付款後僅能換等值商品，無法退款。<br>
+    7. 待確認訂單細節後再進行付款，謝謝您！<br>
+    ❗下單後一定要私訊Instagram才算完成訂單❗
+  `;
+
+  // 3. 定義【手機版】內容 (可以改得更精簡，方便滑動)
+  const dailyHtmlMobile = `
+    1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
+    2. 當日商品請於選定時段內至特定地點取貨。<br>
+    • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+    • 時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+    3. 訂單成立付款後，僅能更換等值商品，無法退款。`;
+  
+    const preorderHtmlMobile = `
+    1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
+    2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，<br>
+    &emsp;&emsp;&emsp我們確認是否能開單。<br>
+    3. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
+    &emsp;&emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
+    &emsp;&emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
+    &emsp;&emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
+    &emsp;&emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，<br>
+    &emsp;&emsp;&emsp出貨日隔日送達 (離島另計)。<br>
+    4. 若需客製或急單需加收$200~$500不等費用（依製作時間），<br>
+    &emsp;&emsp;&ems內容請私訊討論。<br>
+    5. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，<br>
+    &emsp;&emsp;&ems若運送中變形恕不賠償，請自行評估後下單。<br>
+    6. 食品不適用七天猶豫期，恕不退換貨。<br>
+    &emsp;&emsp;&ems如下單付款後僅能換等值商品，無法退款。<br>
+    7. 待確認訂單細節後再進行付款，謝謝您！<br>
+    ❗下單後一定要私訊Instagram才算完成訂單❗`;
+
+  // 4. 分別寫入對應的容器
+  if (contentDesktop) {
+    contentDesktop.innerHTML = (type === 'daily') ? dailyHtmlDesktop : preorderHtmlDesktop;
+    contentDesktop.scrollTop = 0;
+  }
+  if (contentMobile) {
+    contentMobile.innerHTML = (type === 'daily') ? dailyHtmlMobile : preorderHtmlMobile;
+    contentMobile.scrollTop = 0;
+  }
 }
 
 // --- 資料處理與結帳 ---
@@ -878,7 +1054,7 @@ function renderProductsByCat(cat) {
         descDiv.innerText = '在特定時段來店取貨';
     }
 
-    const buttons = document.querySelectorAll('.cat-btn');
+    const buttons = document.querySelectorAll('.page-menu .cat-btn');
     buttons.forEach(btn => {
         if (btn.innerText === cat) {
             btn.classList.add('active');
@@ -1157,6 +1333,10 @@ async function submitOrder() {
 
 init();
 updateSlider();
+document.addEventListener('DOMContentLoaded', () => {
+  showGuide('daily');
+});
+
 </script>
 </body>
 </html>
