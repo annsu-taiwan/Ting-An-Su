@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Deep Coffee 線上點餐</title>
+    <title>deepcoffee 番外-十厚</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf">
@@ -584,6 +584,10 @@
         font-size: 1.15rem !important; /* 稍微調小文字避免過長 */
     }
 
+            .guide-footer{
+                padding-bottom: 5px;
+            }
+
             /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
             .page:nth-of-type(4) h3 {
                 font-size: 2.0rem !important;
@@ -744,7 +748,7 @@
             </div>
 
             <div id="guide-content-mobile" class="guide-body chinese-handwriting"
-                style="color:#353569; font-size:1.2rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.3;">
+                style="color:#353569; font-size:1.2rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.4;">
                 1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
                 2. 當日商品請於選定時段內至特定地點取貨。<br>
                 • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
@@ -778,22 +782,41 @@
         </div>
     </section>
 
-    <section class="page">
-        <div class="content-card">
-            <h3 style="color:#353569;font-size: 2.8rem;">⚠️ 注意事項</h3>
-            <p class="chinese-handwriting" style = "font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto;">
-            1. 如購買當日商品，請務必記得在所選時段內取貨。 <br>
-            2. 如購買預定商品，請務必在填寫資訊後，私訊我們！<br>
+   <section class="page">
+    <div class="content-card desktop-only-content">
+        <h3 style="color:#353569; font-size: 2.8rem; margin-bottom: 25px;">⚠️ 注意事項</h3>
+        <p class="chinese-handwriting" style="font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto; line-height: 2;">
+            1. 如購買當日商品，請務必記得在所選時段內取貨。<br>
+            2. 如購買預定商品，請務必在填寫資訊後，主動私訊我們！<br>
             3. 商品付款後 僅能換等值商品 無法退款。<br>
             4. 如有特殊需求，歡迎於結帳頁面告知，並私訊 deep coffee IG。<br><br>
-            </p>
-            <p class="chinese-handwriting" style = "font-size: 1.4rem;">
+        </p>
+        <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 30px;">
             謝謝您 <br>
-            產品皆為手工製作 不加任何防腐劑 請盡早享用。<br><br></p>
-            <button class="nav-btn" onclick="nextPage()" style = "text-decoration: underline;">我已了解</button>
-            <span class="prev-link" style = "font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
-        </div>
-    </section>
+            產品皆為手工製作 不加任何防腐劑 請盡早享用。
+        </p>
+    </div>
+
+    <div class="content-card mobile-only-content">
+        <h3 style="color:#353569; font-size: 2.6rem; margin-bottom: 15px;">⚠️ 注意事項</h3>
+        <p class="chinese-handwriting" style="font-size: 1.4rem; text-align: left; width: 92%; margin: 0 auto; line-height: 2;">
+            1. 如購買當日商品，請務必記得在所選時段內取貨。<br>
+            2. 如購買預定商品，請務必在填寫資訊後，主動私訊我們！<br>
+            3. 商品付款後 僅能換等值商品 無法退款。<br>
+            4. 如有特殊需求，歡迎於結帳頁面告知，並私訊 deep coffee IG。<br><br>
+        </p>
+        <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 20px;">
+            謝謝您<br>
+            產品皆為手工製作 不加任何防腐劑<br>
+            請盡早享用！
+        </p>
+    </div>
+
+    <div class="nav-footer" style="margin-top: 20px;">
+        <button class="nav-btn" onclick="nextPage()" style="text-decoration: underline;">我已了解</button>
+        <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
+    </div>
+</section>
 
     <section class="page page-checkout">
         <div class="content-card" style="max-width: 650px;">
