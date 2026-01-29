@@ -129,54 +129,52 @@
             bottom: 50px;
         }
 
-/* ✅ 1. 基礎顯示控制 (最重要：移除 inline style 的干擾) */
-.mobile-only-content { display: none !important; }
-.desktop-only-content { display: flex !important; flex-direction: column; }
+        /* ✅ 1. 基礎顯示控制 (最重要：移除 inline style 的干擾) */
+        .mobile-only-content { display: none !important; }
+        .desktop-only-content { display: flex !important; flex-direction: column; }
 
-/* ✅ 2. 購物須知頁面整體高度控制 */
-.page-guide {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
-    justify-content: flex-start !important;
-    padding-top: 5vh !important;
-    overflow: hidden !important;
-}
+        /* ✅ 2. 購物須知頁面整體高度控制 */
+        .page-guide {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100vh !important;
+            justify-content: flex-start !important;
+            padding-top: 5vh !important;
+            overflow: hidden !important;
+        }
 
-/* ✅ 3. 內容卡片：設定權重確保切換正常 */
-.page-guide .content-card {
-    height: auto !important;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: visible !important;
-    align-items: center;
-}
+        /* ✅ 3. 內容卡片：設定權重確保切換正常 */
+        .page-guide .content-card {
+            height: auto !important;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: visible !important;
+            align-items: center;
+        }
 
-/* ✅ 4. 捲動區域：確保文字可以滑動且不壓到 Footer */
-.guide-body {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    text-align: left;
-    padding: 10px 0;
-    margin: 0 !important;
-}
+        /* ✅ 4. 捲動區域：確保文字可以滑動且不壓到 Footer */
+        .guide-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            text-align: left;
+            padding: 10px 0;
+            margin: 0 !important;
+        }
 
-
-
-/* ✅ 〈向左滑動〉固定在文字正下方、置中 */
-.page-guide .guide-footer{
-  flex: 0 0 auto;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 10px 0 20px !important; 
-    margin-top: auto;
-}
+        /* ✅ 〈向左滑動〉固定在文字正下方、置中 */
+        .page-guide .guide-footer{
+            flex: 0 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px 0 30px !important; 
+            margin-top: auto;
+        }
 
         /* 💡 選中時的顏色：深藍色 */
         .guide-btn.active {
@@ -565,30 +563,31 @@
                 font-size: 16px; 
             }
             .content-card {
-        width: 100% !important;
-        margin: 0 auto !important;
-        padding: 10px 20px !important; /* 給予左右對等的留白 */
-        box-sizing: border-box !important;
-        align-items: center !important; /* 確保子元素水平置中 */
-    }
+                width: 100% !important;
+                margin: 0 auto !important;
+                padding: 10px 20px !important; /* 給予左右對等的留白 */
+                box-sizing: border-box !important;
+                align-items: center !important; /* 確保子元素水平置中 */
+            }
 
             /* 針對標題再縮小一點點，避免換行 */
             h1 { font-size: 1.8rem; }
             h3 { font-size: 1.5rem; }
 
             .desktop-only-content {
-        display: none !important; /* 💡 確保電腦版完全消失 */
-    }
-    .mobile-only-content {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        align-items: center !important; /* 核心：解決偏左問題 */
-        box-sizing: border-box !important;
-    }
-    .guide-body {
-        font-size: 1.15rem !important; /* 稍微調小文字避免過長 */
-    }
+                display: none !important; /* 💡 確保電腦版完全消失 */
+            }
+
+            .mobile-only-content {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                align-items: center !important; /* 核心：解決偏左問題 */
+                box-sizing: border-box !important;
+            }
+            .guide-body {
+                font-size: 1.15rem !important; /* 稍微調小文字避免過長 */
+            }
 
 
             /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
@@ -1011,7 +1010,8 @@ function showGuide(type) {
     &emsp;&emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
     4. 若需客製或急單需加收$200~$500不等費用（依製作時間），內容請私訊討論。<br>
     5. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
-    6. 食品不適用七天猶豫期，恕不退換貨。如下單付款後僅能換等值商品，無法退款。<br>
+    6. 食品不適用七天猶豫期，恕不退換貨。<br>
+    &emsp;&emsp;&emsp;如下單付款後僅能換等值商品，無法退款。<br>
     7. 待確認訂單細節後再進行付款，謝謝您！<br>
     ❗下單後一定要私訊Instagram才算完成訂單❗
   `;
