@@ -174,7 +174,8 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 12px 0 50px;
+  padding: 10px 0 20px !important; 
+    margin-top: auto;
 }
 
         /* 💡 選中時的顏色：深藍色 */
@@ -564,8 +565,12 @@
                 font-size: 16px; 
             }
             .content-card {
-                padding: 10px; /* 縮小內距，留更多空間給輸入框 */
-            }
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 10px 20px !important; /* 給予左右對等的留白 */
+        box-sizing: border-box !important;
+        align-items: center !important; /* 確保子元素水平置中 */
+    }
 
             /* 針對標題再縮小一點點，避免換行 */
             h1 { font-size: 1.8rem; }
@@ -575,10 +580,11 @@
         display: none !important; /* 💡 確保電腦版完全消失 */
     }
     .mobile-only-content {
-        display: flex !important; /* 💡 手機版改為 flex 排列 */
-        flex-direction: column;
-        width: 100%;
-        box-sizing: border-box;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: center !important; /* 核心：解決偏左問題 */
+        box-sizing: border-box !important;
     }
     .guide-body {
         font-size: 1.15rem !important; /* 稍微調小文字避免過長 */
