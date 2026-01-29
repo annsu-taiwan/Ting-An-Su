@@ -1079,7 +1079,9 @@ function renderProductsByCat(cat) {
 
     const buttons = document.querySelectorAll('.page-menu .cat-btn');
     buttons.forEach(btn => {
-        if (btn.innerText === cat) {
+        const btnText = btn.innerText.trim();
+        // 💡 修正邏輯：如果傳入的是「預約甜點」，則讓文字為「預訂商品」的按鈕變深色
+        if (btnText === cat || (cat === '預約甜點' && btnText === '預訂商品')) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
