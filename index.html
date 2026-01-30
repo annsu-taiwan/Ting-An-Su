@@ -593,7 +593,7 @@
                 height: 100vh !important;
                 justify-content: flex-start !important;
                 /* 核心修改：從原本的 5vh 改為 12vh 讓內容下降 */
-                padding-top: 5vh !important; 
+                padding-top: 6vh !important; 
                 overflow: hidden !important;
             }
             
@@ -1417,13 +1417,15 @@ async function submitOrder() {
     try {
         const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
         const result = await resp.json();
+        
         if (result.status === "Success") {
-            // 💡 同時更新網頁版與手機版的成功訊息
-            const msgDesktop = document.getElementById('success-msg-desktop');
-            const msgMobile = document.getElementById('success-msg-mobile');
+            // 💡 修正：將 DOM 元素變數更名（例如加上 el 字尾），避免與訊息字串衝突
+            const elDesktop = document.getElementById('success-msg-desktop');
+            const elMobile = document.getElementById('success-msg-mobile');
     
-            if (msgDesktop) msgDesktop.innerHTML = dynamicMsg;
-            if (msgMobile) msgMobile.innerHTML = dynamicMsg;
+            // 💡 修正：分別將對應的字串變數塞入 HTML
+            if (elDesktop) elDesktop.innerHTML = msgDesktop; 
+            if (elMobile) elMobile.innerHTML = msgMobile;
 
             currentPage = 6;
             updateSlider();
