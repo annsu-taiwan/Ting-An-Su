@@ -381,7 +381,7 @@
         /* ✅ 購物須知 tabs：強制覆蓋 nav-btn 的顏色 */
         .page-guide .guide-tabs .guide-btn {
           color: #9898ba !important;   /* 未選中：淡色 */
-          font-weight: normal !important;
+          font-weight: bold !important;
         }
 
         .page-guide .guide-tabs .guide-btn.active {
@@ -586,16 +586,27 @@
                 align-items: center !important; /* 核心：解決偏左問題 */
                 box-sizing: border-box !important;
             }
+
+            .page-guide {
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100vh !important;
+                justify-content: flex-start !important;
+                /* 核心修改：從原本的 5vh 改為 12vh 讓內容下降 */
+                padding-top: 12vh !important; 
+                overflow: hidden !important;
+            }
+            
             .guide-body {
                 font-family: 'LXGW WenKai TC', 'Microsoft JhengHei', sans-serif !important;
-                font-size: 0.9rem !important; /* 稍微調小文字避免過長 */
+                font-size: 0.8rem !important; /* 稍微調小文字避免過長 */
             }
 
 
             /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
             .page:nth-of-type(4) h3 {
                 font-size: 2.0rem !important;
-                margin-top: 70px;
+                margin-top: 90px;
                 margin-bottom: 20px !important;
             }
 
@@ -607,6 +618,15 @@
 
             .page:nth-of-type(4) .prev-link {
                 font-size: 1.2rem !important;
+            }
+
+            .page:nth-of-type(5) {
+                padding-top: 12vh !important; /* 12vh 的垂直空間 */
+            }
+
+            .page:nth-of-type(5) .nav-footer {
+                margin-top: 30px !important;
+                margin-bottom: 40px !important;   /* 確保距離底部有足夠空間 */
             }
 
             .page:nth-of-type(5) .prev-link {
@@ -653,7 +673,7 @@
                 margin-bottom: 20px !important;
                 padding-left: 10px;
                 padding-right: 10px;
-                padding-bottom: 5px; /* 手機版留更多底部空間避免被導覽列遮住 */
+                padding-bottom: 3px; /* 手機版留更多底部空間避免被導覽列遮住 */
             }
 
             #product-list {
