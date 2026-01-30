@@ -1258,7 +1258,7 @@ function showCheckout() {
     // 3. 根據類別更新提示文字
     if (hasDaily) {
         // 當日商品的提示
-        noteInput.placeholder = "如果取貨時間需要協調，\n請私訊我們的 IG ～";
+        noteInput.placeholder = "如果取貨時間需要協調，\n請填寫想取貨時間並私訊我們的 IG ～";
     } else {
         // 預訂商品的提示
         noteInput.placeholder = "請輸入您的需求，\n並私訊我們的 IG ！";
@@ -1266,7 +1266,7 @@ function showCheckout() {
 
     // 3. 設定後台紀錄用的取貨方式
     let methodValue = "";
-    if (hasDaily) methodValue = "預約自取";
+    if (hasDaily) methodValue = "自取";
     else if (hasPreorder) methodValue = document.getElementById('preorder-type').value;
 
     // 確保 pickup-method 這個隱藏欄位有拿到值，後台才收得到
@@ -1310,15 +1310,14 @@ async function submitOrder() {
     const isDailyOrder = document.getElementById('account-tail-section').style.display === 'block';
 
     // 💡 驗證：當日商品才需要後五碼
-    if (!name || !phone || (isDailyOrder && tail.length !== 5)) {
-        return alert(isDailyOrder ? '請完整填寫姓名、手機與帳號後五碼！' : '請填寫姓名與手機！');
-    }
+    if (!name || !phone) return alert('請填寫姓名與手機號碼！');
+    if (isDailyOrder && tail.length !== 5) return alert('請輸入帳號後五碼！');
 
     let details = [];
     let methodValue = "";
 
     if (isDailyOrder) {
-        methodValue = "預約自取";
+        methodValue = "自取";
         details.push(`自取時段: ${document.getElementById('pickup-time').value}`);
     } else {
         const preType = document.getElementById('preorder-type').value;
@@ -1364,13 +1363,15 @@ async function submitOrder() {
     if (isDailyOrder) {
         dynamicMsg = `感謝您的訂購！<br>請記得於${time}至${address}取貨！`;
     } else if (hasPreorder) {
-        dynamicMsg = `感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong>，<br>待確認訂單後再進行付款，謝謝您！`;
+        dynamicMsg = `
+        感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong>～<br>
+        待確認訂單後，將安排於${date}前完成出貨，謝謝您！`;
     }
 
     const orderData = {
         name: name,
         phone: phone,
-        accountTail: accountTail,
+        accountTail: tail,
         pickupMethod: methodValue,
         pickupDetail: details.join("\n\n"), // 合併資訊寫入試算表 I 欄
         cart: cart,
