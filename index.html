@@ -155,6 +155,7 @@
 
         /* ✅ 4. 捲動區域：確保文字可以滑動且不壓到 Footer */
         .guide-body {
+            font-family: 'LXGW WenKai TC', 'Microsoft JhengHei', sans-serif !important;
             flex: 1 1 auto;
             min-height: 0;
             overflow-y: auto !important;
@@ -164,6 +165,13 @@
             padding: 10px 0;
             margin: 0 !important;
         }
+
+        .guide-body strong {
+                font-family: 'LXGW WenKai TC', sans-serif !important;
+                font-weight: 600 !important; /* 強制使用較粗的字重 */
+                color: #30305f !important;   /* 顏色稍微再深一點，提升對比度 */
+                letter-spacing: 0px !important; /* 縮減字距讓重點更緊湊 */
+            }
 
         /* ✅ 〈向左滑動〉固定在文字正下方、置中 */
         .page-guide .guide-footer{
@@ -535,7 +543,7 @@
         /* 社交連結區域的邊框線 */
         .success-footer-links {
             width: 100%;
-            max-width: 400px;
+            max-width: 800px;
             border-top: none !important;
             padding-top: 25px;
         }
@@ -747,7 +755,7 @@
     <section class="page page-p1">
         <div class="content-card desktop-only-content">
             <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
-            <p class="chinese-handwriting" style="color: #353569; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
+            <p class="chinese-handwriting" style="color: #636396; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
                 收起10年店面營業後 偶爾還是會想滿足那種玩弄滋味的樂趣<br>
                 挑選各式在地有趣的食材 不定期限時限量開單<br><br>
                 少了一點面對面的熟絡 但是記憶中溫暖的滋味 仍然那樣
@@ -784,12 +792,12 @@
                 <button class="nav-btn guide-btn guide-btn-desktop" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
             </div>
 
-            <div id="guide-content-desktop" class="guide-body chinese-handwriting"
-                style="color:#353569; font-size:1.3rem; text-align:left; width:fit-content; max-width:95%; margin:0 auto; line-height:1.5;">
+            <div id="guide-content-desktop" class="guide-body"
+                style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:95%; margin:0 auto; line-height:1.8;">
                 1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
                 2. 當日商品請於選定時段內至特定地點取貨。<br>
-                &emsp;&emsp;&emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-                &emsp;&emsp;&emsp;時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+                &emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+                &emsp;時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
                 3. 訂單成立付款後，僅能更換等值商品，無法退款。
             </div>
         </div>
@@ -806,7 +814,7 @@
                 <button class="nav-btn guide-btn guide-btn-mobile" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
             </div>
 
-            <div id="guide-content-mobile" class="guide-body handwriting-natural"
+            <div id="guide-content-mobile" class="guide-body"
                 style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.8;">
                 1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
                 2. 當日商品請於選定時段內至特定地點取貨。<br>
@@ -942,17 +950,17 @@
             </p>
             
             <div class="success-footer-links">
-                <p style="font-size: 1.4rem; color: #353569; margin-bottom: 15px;">
+                <p style="font-size: 1.4rem; color: #353569; max-width: 800px !important; margin-bottom: 15px;">
                     除了除了甜點、咖啡之外，下面還有我們的bnb住宿以及選物空間，<br>
                     有機會歡迎來台東找我們玩喔！
                 </p>
                 
                 <div class="social-grid">
-                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
-                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
+                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link" style="font-weight: bold;">Deep Coffee IG</a>
+                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link" style="font-weight: bold;">Deep Airbnb IG</a>
                 </div>
 
-                <button class="nav-btn" onclick="location.reload()" style="text-decoration: underline !important; margin-bottom: 40px;">
+                <button class="nav-btn" onclick="location.reload()" style="font-size: 1.2rem !important; font-weight: normal !important; margin-bottom: 40px;">
                     回首頁再次點餐
                 </button>
             </div>
@@ -1072,8 +1080,8 @@ function showGuide(type) {
   const dailyHtmlDesktop = `
     1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
     2. 當日商品請於選定時段內至特定地點取貨。<br>
-    &emsp;&emsp;&emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-    &emsp;&emsp;&emsp;時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+    &emsp; 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+    &emsp; 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
     3. 訂單成立付款後，僅能更換等值商品，無法退款。
   `;
 
@@ -1082,15 +1090,17 @@ function showGuide(type) {
     2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
     3. 響應環保愛地球，將不提供一次性餐具。<br>
     4. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
-    &emsp;&emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
-    &emsp;&emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
-    &emsp;&emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
-    &emsp;&emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
-    5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），內容請私訊討論。<br>
-    6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
+    &emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
+    &emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
+    &emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
+    &emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
+    5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），<br>
+    &emsp; 內容請私訊討論。<br>
+    6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，<br>
+    &emsp; 若運送中變形恕不賠償，請自行評估後下單。<br>
     7. 食品不適用七天猶豫期，恕不退換貨。<br>
-    &emsp;&emsp;&emsp;如下單付款後，僅能換等值商品，無法退款。<br>
-    8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br>
+    &emsp; 如下單付款後，僅能換等值商品，無法退款。<br>
+    8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br><br>
     ❗下單後一定要私訊Instagram才算完成訂單❗
   `;
 
@@ -1416,11 +1426,11 @@ async function submitOrder() {
         msgMobile  =`感謝您的訂購！<br>請記得於 ${time}<br>至${address}取貨！`;
     } else if (hasPreorder) {
         msgDesktop = `
-        感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong>～<br>
+        感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong> ～<br>
         待確認訂單後，將安排於${date}前完成出貨，謝謝您！`;
         msgMobile  = `
         感謝您的訂購！<br>
-        <strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">請務必主動私訊我們的 IG</strong>～<br>
+        <strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">請務必主動私訊我們的 IG</strong> ～<br>
         待確認訂單後，將於 ${date} 前完成出貨，<br>
         謝謝您！`;
     }
