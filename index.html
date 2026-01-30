@@ -697,6 +697,13 @@
             .page-success h3 {
                 font-size: 1.8rem !important;
             }
+
+            .social-link {
+                font-family: 'Caveat', sans-serif !important; /* 英文連結用手寫體更有質感 */
+                font-size: 1.3rem !important;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
         }
     </style>
 </head>
@@ -879,8 +886,8 @@
                     <div id="pickup-slot-section" style="display: none;">
                         <label class="form-label">自取時段</label>
                         <select id="pickup-time">
-                            <option value="下午 1:00 - 2:00">13:00 - 14:00</option>
-                            <option value="下午 2:00 - 3:00">14:00 - 15:00</option>
+                            <option value="下午1:00 - 2:00">13:00 - 14:00</option>
+                            <option value="下午2:00 - 3:00">14:00 - 15:00</option>
                         </select>                                            
                     </div>
                 
@@ -907,9 +914,9 @@
     </section>
     
     <section class="page page-success">
-        <div class="content-card">
+        <div class="content-card desktop-only-content">
             <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
-            <p id="success-msg" class="chinese-handwriting" style="font-size: 1.6rem; margin-bottom: 20px;">
+            <p id="success-msg-desktop" class="chinese-handwriting" style="font-size: 1.4rem; margin-bottom: 20px;">
                 感謝您的訂購，請等候通知。
             </p>
             
@@ -925,6 +932,28 @@
                 </div>
 
                 <button class="nav-btn" onclick="location.reload()" style="text-decoration: underline !important; margin-bottom: 40px;">
+                    回首頁再次點餐
+                </button>
+            </div>
+        </div>
+
+        <div class="content-card mobile-only-content">
+            <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
+            <p id="success-msg-mobile" class="chinese-handwriting" style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
+                感謝您的訂購，請等候通知。
+            </p>
+        
+            <div class="success-footer-links" style="width: 100%;">
+                <p class="chinese-handwriting" style="font-size: 1.4rem; color: #353569; margin-bottom: 20px; max-width: 90%; line-height: 1.7;">
+                    除了甜點、咖啡之外，<br>
+                    下面還有我們的bnb住宿以及選物空間，<br>
+                    有機會歡迎來台東找我們玩喔！
+                </p>
+                <div class="social-grid>
+                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
+                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
+                </div>
+                <button class="nav-btn" onclick="location.reload()" style="text-decoration: underline !important; margin-top: 30px; margin-bottom: 40px;">
                     回首頁再次點餐
                 </button>
             </div>
@@ -1359,13 +1388,20 @@ async function submitOrder() {
     const address = "台東縣台東市錦州街51號"; // 💡 請在此替換成實際取貨地址
 
     // 💡 2. 根據條件生成對應訊息
-    let dynamicMsg = "感謝您的訂購，請等候通知。";
+    let msgDesktop = "感謝您的訂購，請等候通知。";
+    let msgMobile = "感謝您的訂購，請等候通知。";
     if (isDailyOrder) {
-        dynamicMsg = `感謝您的訂購！<br>請記得於${time}至${address}取貨！`;
+        msgDesktop = `感謝您的訂購！<br>請記得於 ${time} 至${address}取貨！`;
+        msgMobile  =`感謝您的訂購！<br>請記得於 ${time}<br>至${address}取貨！`;
     } else if (hasPreorder) {
-        dynamicMsg = `
+        msgDesktop = `
         感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong>～<br>
         待確認訂單後，將安排於${date}前完成出貨，謝謝您！`;
+        msgMobile  = `
+        感謝您的訂購！<br>
+        <strong>請務必主動私訊我們的 IG</strong>～<br>
+        待確認訂單後，將安排於${date}前完成出貨，<br>
+        謝謝您！`;
     }
 
     const orderData = {
@@ -1382,7 +1418,13 @@ async function submitOrder() {
         const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
         const result = await resp.json();
         if (result.status === "Success") {
-            document.getElementById('success-msg').innerHTML = dynamicMsg;
+            // 💡 同時更新網頁版與手機版的成功訊息
+            const msgDesktop = document.getElementById('success-msg-desktop');
+            const msgMobile = document.getElementById('success-msg-mobile');
+    
+            if (msgDesktop) msgDesktop.innerHTML = dynamicMsg;
+            if (msgMobile) msgMobile.innerHTML = dynamicMsg;
+
             currentPage = 6;
             updateSlider();
         } else {
