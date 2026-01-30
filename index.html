@@ -605,7 +605,7 @@
             .guide-body strong {
                 font-family: 'LXGW WenKai TC', sans-serif !important;
                 font-weight: 600 !important; /* 強制使用較粗的字重 */
-                color: #1b1b3a !important;   /* 顏色稍微再深一點，提升對比度 */
+                color: #30305f !important;   /* 顏色稍微再深一點，提升對比度 */
                 letter-spacing: 0px !important; /* 縮減字距讓重點更緊湊 */
             }
 
@@ -637,6 +637,7 @@
 
             .page:nth-of-type(5) .prev-link {
                 font-size: 1.2rem !important;
+                margin-top: 10px !important;
             }
 
             .page:nth-of-type(5) h3 {
@@ -778,11 +779,11 @@
             </div>
 
             <div id="guide-content-mobile" class="guide-body handwriting-natural"
-                style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.6;">
+                style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.8;">
                 1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
                 2. 當日商品請於選定時段內至特定地點取貨。<br>
                 • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-                • 時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+                • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
                 3. 訂單成立付款後，僅能更換等值商品，無法退款。
             </div>
         </div>
@@ -1048,7 +1049,7 @@ function showGuide(type) {
     1. 我們僅接受轉帳方式付款，請於訂購時完成轉帳。<br>
     2. 當日商品請於選定時段內至特定地點取貨。<br>
     • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-    • 時段有以下選擇：13:00 - 14:00 / 14:00 - 15:00<br>
+    • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
     3. 訂單成立付款後，僅能更換等值商品，無法退款。`;
   
     const preorderHtmlMobile = `
@@ -1065,8 +1066,8 @@ function showGuide(type) {
     6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
     7. 食品不適用七天猶豫期，恕不退換貨。<br>
     如下單付款後僅能換等值商品，無法退款。<br>
-    8. 待確認訂單細節後再進行付款，謝謝您！<br>
-    ❗下單後一定要私訊Instagram才算完成訂單❗`;
+    8. 待確認訂單細節後再進行付款，謝謝您！<br><br>
+    <strong>❗下單後一定要私訊Instagram才算完成訂單❗</strong>`;
 
   // 4. 分別寫入對應的容器
   if (contentDesktop) {
