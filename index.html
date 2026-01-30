@@ -593,7 +593,7 @@
                 height: 100vh !important;
                 justify-content: flex-start !important;
                 /* 核心修改：從原本的 5vh 改為 12vh 讓內容下降 */
-                padding-top: 6vh !important; 
+                padding-top: 7vh !important; 
                 overflow: hidden !important;
             }
             
@@ -691,11 +691,12 @@
 
             .page-success {
                 justify-content: center !important; 
+                padding-top: 30px !important;
                 padding-bottom: 30px !important; /* 讓底部留白縮小 */
             }
     
             .page-success h3 {
-                font-size: 1.8rem !important;
+                font-size: 1.6rem !important;
             }
 
             .social-link {
@@ -939,17 +940,17 @@
 
         <div class="content-card mobile-only-content">
             <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
-            <p id="success-msg-mobile" class="chinese-handwriting" style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.6;">
+            <p id="success-msg-mobile" style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; margin-bottom: 20px; max-width: 95%; line-height: 1.6;">
                 感謝您的訂購，請等候通知。
             </p>
         
             <div class="success-footer-links" style="width: 100%;">
-                <p class="chinese-handwriting" style="font-size: 1.4rem; color: #353569; margin-bottom: 20px; max-width: 90%; line-height: 1.7;">
+                <p class="chinese-handwriting" style="font-size: 1.4rem; color: #353569; margin-bottom: 20px; max-width: 95%; line-height: 1.7;">
                     除了甜點、咖啡之外，<br>
                     下面還有我們的bnb住宿以及選物空間，<br>
                     有機會歡迎來台東找我們玩喔！
                 </p>
-                <div class="social-grid>
+                <div class="social-grid">
                     <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
                     <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
                 </div>
@@ -1400,7 +1401,7 @@ async function submitOrder() {
         msgMobile  = `
         感謝您的訂購！<br>
         <strong>請務必主動私訊我們的 IG</strong>～<br>
-        待確認訂單後，將安排於${date}前完成出貨，<br>
+        待確認訂單後，將於 ${date} 前完成出貨，<br>
         謝謝您！`;
     }
 
