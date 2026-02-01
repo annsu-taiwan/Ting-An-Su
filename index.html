@@ -1,1375 +1,1313 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>deepcoffee 番外-十厚</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-web@latest/style.css">
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
-        /* 1. 正確載入字體檔案 */
-        @font-face {
-            font-family: 'ChenYuLuoYan';
-            /* 使用 2.0 最新版本路徑 */
-            src: url('https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
-            font-display: swap; /* 確保網頁載入時字體不留白 */
-        }
-        /* 2. 全域放大設定 */
-        html {
-            /* 將基礎字級從預設的 16px 提升到 20px */
-            font-size: 20px;
-        }
-        
-        :root {
-            --primary: #9f9fb8;
-            --accent: #353569; /* 稍微深一點，手寫字才清晰 */
-        }
-
-        /* 2. 強制套用至所有元素 */
-        *, body, html, input, button, select, textarea {
-            /* 這裡的名稱必須與上方 @font-face 定義的一致 */
-            font-family: 'Caveat', 'ChenYuLuoYan', "Microsoft JhengHei", sans-serif !important;
-            -webkit-font-smoothing: antialiased;line-height: 1.6;
-        }
-
-        body {
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            overflow: hidden; 
-            background-color: #F8FBF8; /* 魚肚白 */
-            user-select: none;
-            -webkit-user-select: none;
-            color: var(--accent);
-        }
-
-        /* 3. 針對特定元件進一步放大 */
-        h1 { font-size: 2.2rem; } /* 標題 */
-        h3 { font-size: 1.8rem; } /* Menu 標題 */
-
-        /* 保留特定的英文手寫風格 */
-        .handwriting-elegant {
-            font-family: 'Dancing Script', cursive !important;
-            font-size: 1.8rem;
-        }
-
-        .handwriting-natural {
-            font-family: 'Caveat', cursive !important;
-            font-size: 1.6rem;
-            letter-spacing: 1px;
-        }
-        
-        /* 針對關於頁面或注意事項的長文字 */
-        .chinese-handwriting {
-            width: 100%;
-            max-width: 90%; /* 留一點左右呼吸空間 */
-            margin: 0 auto;
-        }
-
-        .slider-container { 
-            display: flex; width: 700%; height: 100vh; 
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            touch-action: pan-y; margin: 0;  /* 💡 確保沒有外邊距 */
-            padding: 0; /* 💡 確保沒有內邊距 */;
-        }
-        
-        .page {
-            width: 100vw !important;
-            height: 100vh; /* 確保佔滿全螢幕高度 */
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center; /* 💡 這是垂直置中的關鍵 */
-            padding: 0; /* 💡 先將 padding 設為 0，避免推擠內容 */
-            margin: 0;
-            box-sizing: border-box;
-            flex-shrink: 0;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .content-card { 
-            background: none; 
-            box-shadow: none;
-            padding: 0; /* 💡 移除內距，讓置中更精確 */
-            width: 90%; 
-            max-width: 800px; 
-            margin: 0 auto;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* 💡 核心：防止長文字撐破版面 */
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-        }
-
-        .page:not(.page-p1)::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;transform: translateY(-20px);
-        }
-        
-        /* 💡 讓首頁 Logo 頁達成完美垂直水平置中 */
-        .page-p1 .content-card {
-            /* 核心：自動推開上下空間，達成絕對垂直置中 */
-            margin: auto 0 !important; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: auto;
-        }
-
-        /* 💡 確保首頁的 Footer 不會推擠到內容位置 */
-        .page-p1 .nav-footer {
-            margin-top: 0; 
-            position: absolute; /* 僅在首頁使用 absolute 以免影響 Logo 置中 */
-            bottom: 50px;
-        }
-
-        /* ✅ 1. 基礎顯示控制 (最重要：移除 inline style 的干擾) */
-        .mobile-only-content { display: none !important; }
-        .desktop-only-content { display: flex !important; flex-direction: column; }
-
-        /* ✅ 2. 購物須知頁面整體高度控制 */
-        .page-guide {
-            display: flex !important;
-            flex-direction: column !important;
-            height: 100vh !important;
-            justify-content: flex-start !important;
-            padding-top: 5vh !important;
-            overflow: hidden !important;
-        }
-
-        /* ✅ 3. 內容卡片：設定權重確保切換正常 */
-        .page-guide .content-card {
-            height: auto !important;
-            flex: 1 1 auto;
-            min-height: 0;
-            overflow: visible !important;
-            align-items: center;
-        }
-
-        /* ✅ 4. 捲動區域：確保文字可以滑動且不壓到 Footer */
-        .guide-body {
-            font-family: 'LXGW WenKai TC', 'Microsoft JhengHei', sans-serif !important;
-            flex: 1 1 auto;
-            min-height: 0;
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-            text-align: left;
-            padding: 10px 0;
-            margin: 0 !important;
-        }
-
-        .guide-body strong {
-                font-family: 'LXGW WenKai TC', sans-serif !important;
-                font-weight: 600 !important; /* 強制使用較粗的字重 */
-                color: #30305f !important;   /* 顏色稍微再深一點，提升對比度 */
-                letter-spacing: 0px !important; /* 縮減字距讓重點更緊湊 */
-            }
-
-        /* ✅ 〈向左滑動〉固定在文字正下方、置中 */
-        .page-guide .guide-footer{
-            flex: 0 0 auto;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 10px 0 30px !important; 
-            margin-top: auto;
-        }
-
-        /* 💡 選中時的顏色：深藍色 */
-        .guide-btn.active {
-            color: #353569 !important; /* 與標題同色 */
-            font-weight: bold !important;
-        }
-
-        /* 防止內容切換時晃動 */
-        #guide-content {
-            display: block;
-            overflow: hidden;
-            transition: opacity 0.2s ease-in-out;
-        }
-
-        /* 購物須知：固定標題與 tabs，內容自己捲動 */
-
-        .page-guide .guide-title,
-        .page-guide .guide-tabs {
-         flex: 0 0 auto;
-        }
-
-        /* =========================================
-           1. Menu 頁面整體佈局 (置頂與間距縮小)
-           ========================================= */
-        .page-menu {
-            /* 核心：從頂部開始排列，不再居中 */
-            justify-content: flex-start !important; 
-            padding-top: 6vh; 
-        }
-
-        .page-menu .content-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            height: 100%;
-            overflow: hidden; /* 防止卡片本身捲動 */
-        }
-
-        /* 💡 縮小「Menu」標題間距 */
-        .page-menu h3 {
-            margin-top: 40px !important;
-            margin-bottom: 20px !important; /* 緊貼下方按鈕 */
-            line-height: 1.2;
-        }
-
-        /* 💡 縮小「分類按鈕」容器間距 */
-        .page-menu .content-card > div:nth-child(2) {
-            margin-bottom: 0px !important; 
-        }
-
-                /* 💡 縮小「分類說明文字」間距 */
-        #category-desc {
-            margin-top: 0px !important;
-            margin-bottom: 15px !important; 
-            line-height: 1;
-            opacity: 0.8;
-        }
-        /* =========================================
-           2. 商品列表捲動區塊 (不變，保留核心邏輯)
-           ========================================= */
-        #product-list {
-            width: 100%; 
-            margin-top: 5px; /* 緊貼上方說明 */
-            overflow-y: auto; 
-            max-height: 55vh; 
-            padding-bottom: 100px; /* 預留底部按鈕空間 */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* 捲動條美化 */
-        #product-list::-webkit-scrollbar { width: 4px; }
-        #product-list::-webkit-scrollbar-thumb {
-            background: rgba(199, 181, 163, 0.4);
-            border-radius: 10px;
-        }
-
-        /* =========================================
-           3. 商品單項與右側資訊 (極致縮小行距)
-           ========================================= */
-        .product { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 8px 12px; /* 縮減內距讓框框變扁 */
-            background: rgba(255, 255, 255, 0.9);
-            margin-bottom: 6px; 
-            border-radius: 8px;
-            width: 100% !important;
-            box-sizing: border-box;
-            overflow: hidden;       /* 💡 超出部分隱藏或自動處理 */
-        }
-
-        .product-info {
-            text-align: left;
-            min-width: 0;           /* 💡 這是防止 Flexbox 內文字撐破容器的關鍵技巧 */
-            flex: 1;
-            padding-right: 10px;
-        }
-
-        .product-price-section {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 0px; /* 移除庫存、價格、按鈕間的縫隙 */
-        }
-
-        /* 強制縮小右側三行文字的行高 */
-        .product-price-section span, 
-        .product-price-section div {
-            line-height: 1.1 !important;
-            margin: 0 !important;
-        }
-
-        .product-info h4 {
-            /* 💡 如果字真的太長，允許在單詞內換行，不要撐破框框 */
-            overflow-wrap: break-word; 
-            word-wrap: break-word;
-            font-size: 1.3rem;      /* 手機版微調商品名稱大小 */
-        }
-
-        /* =========================================
-           4. 純文字按鈕樣式
-           ========================================= */
-        .qty-btn {
-            background: none !important;
-            border: none !important;
-            color: var(--accent) !important;
-            font-size: 1.5rem !important; 
-            padding: 0 10px !important;
-            cursor: pointer;
-            box-shadow: none !important;
-            text-shadow: none !important;
-        }
-        /* 💡 2. 導覽按鈕：移除框框，改為底線設計 */
-        .nav-btn {
-            background: none !important;
-            border: none !important;
-            color: var(--accent) !important;
-            font-size: 1.4rem !important;
-            padding: 10px 0 !important;
-            letter-spacing: 2px;
-            cursor: pointer;
-            box-shadow: none !important;
-
-            /* 💡 同步調整：改為粗體，不要底線 */
-            font-weight: bold !important;
-            box-shadow: none !important;
-        }
-
-        .nav-footer {
-            /* 💡 移除原本的 position: absolute; left: 50%; transform... */
-            position: static; 
-            margin-top: auto;   /* 💡 核心：把上方內容推開，自動置底 */
-            margin-bottom: 50px; /* 距離底部的安全間距 */
-    
-            width: 90%;
-            max-width: 650px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* 💡 核心：確保內部的總計與按鈕水平置中 */
-            gap: 10px;
-            box-sizing: border-box;
-        }
-
-        .nav-footer .nav-btn {
-            width: auto !important;
-            margin: 0 auto;
-        }
-
-        /* 庫存文字再縮小一點點 */
-        .stock-text {
-            font-size: 1.1rem !important;
-            margin-bottom: -2px !important; /* 稍微往下拉近與價格的距離 */
-        }
-
-        /* 價格字體大小維持，但移除間距 */
-        .price-text {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
-        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); transition: width 0.3s; z-index: 1000; }
-       
-        /* 💡 1. 分類選擇區：改為純文字感 */
-        .cat-btn {
-            background: none !important;
-            border: none !important;
-            padding: 5px 10px !important;
-            cursor: pointer;
-            font-size: 1.6rem !important;
-            color: #9898ba !important; /* 未選中時的顏色 */
-            transition: color 0.3s;
-            box-shadow: none !important;
-        }
-
-        /* 選中狀態：顏色變為原本的背景深色 (var(--accent)) */
-        .cat-btn.active {
-            color: #353569 !important;
-            font-weight: bold;
-        }
-        
-        /* ✅ 購物須知 tabs：強制覆蓋 nav-btn 的顏色 */
-        .page-guide .guide-tabs .guide-btn {
-          color: #9898ba !important;   /* 未選中：淡色 */
-          font-weight: bold !important;
-        }
-
-        .page-guide .guide-tabs .guide-btn.active {
-          color: #353569 !important;   /* 選中：深色 */
-          font-weight: bold !important;
-        }
-
-        .page-checkout {
-            /* 核心：從頂部開始排列，不再居中 */
-            justify-content: flex-start !important; 
-            padding-top: 3vh; 
-        }
-
-        /* 如果您有幫結帳頁面的 section 加入 page-checkout 類別 */
-        .page-checkout .content-card  {
-            justify-content: flex-start !important;
-            padding-top: 0px; /* 💡 稍微往上提 */
-        }
-
-        /* 💡 3. 控制左右兩大欄位的間距與彈性 */
-        .checkout-flex-container {
-            display: flex; 
-            gap: 30px; /* 增加兩欄之間的呼吸空間 */
-            flex-wrap: wrap; 
-            width: 100%;
-        }
-
-        .checkout-column {
-            flex: 1; 
-            min-width: 300px; /* 💡 稍微增加最小寬度，讓單欄時也很大氣 */
-            max-width: 100%;
-            text-align: left;
-        }
-
-        #cart-summary {
-            /* 💡 讓灰色格子變寬，佔滿父容器空間 */
-            width: 100%;
-            max-width: 600px; 
-    
-            /* 💡 縮小與上方「請匯款至」的距離 */
-            margin-top: 0 !important;
-            margin-bottom: 15px;
-            
-            /* 💡 調整內距與外觀 */
-            background: #f5f5f5;
-            padding: 15px !important; /* 增加內距讓文字不擁擠 */
-            border-radius: 8px;
-            font-size: 1rem;
-            color: #353569;
-            box-sizing: border-box;
-            text-align: center;
-        }
-
-        /* 💡 縮小清單內部的行高，讓文字更緊湊 */
-        #cart-summary br {
-            content: "";
-            margin: 2px 0;
-            display: block;
-        }
-
-        #cart-summary hr {
-            border: 0;
-            border-top: 1px solid #ddd;
-            margin: 10px 0;
-        }
-        /* 統一輸入框與下拉選單的樣式 */
-        /* 讓填資料的格子變小、更精緻 */
-        /* 💡 3. 輸入框與下拉選單：全部改為底線式 */
-        input, select, textarea {
-            width: 100%;
-            /* 移除所有邊框，僅保留底線 */
-            border: none !important;
-            border-bottom: 1px solid #ddd !important;
-            border-radius: 0 !important;
-            background-color: transparent !important;
-            padding: 5px 0px !important;
-            margin-top: 0px;
-            font-size: 1.1rem !important;
-            color: #1b1b3a;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        /* 當輸入框獲得焦點時，底線變深 */
-        input:focus, select:focus, textarea:focus {
-            border-bottom: 1.5px solid var(--accent) !important;
-        }
-
-        input, select, textarea {
-            width: 100% !important;
-            box-sizing: border-box; /* 確保 padding 不會增加寬度 */
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-
-        /* 下拉選單箭頭微調 */
-        select {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 10px;
-            padding-right: 25px;
-            -webkit-appearance: none;
-            appearance: none;
-            -webkit-appearance: none;
-            appearance: none;
-            background: none !important;
-        }
-
-        #submit-btn {
-            width: 100%;
-            height: 38px;           /* 高度與 input 格子完全一致 */
-            margin-top: 20px;       /* 與上方資訊隔開一行 */
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.0rem;
-            cursor: pointer;
-            display: block;         /* 確保它自己佔據一行 */
-        }
-
-        /* 讓「回上一頁修改」也靠右 */
-        .prev-link-right {
-            display: block;
-            text-align: right;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: #666;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        /* 標籤小標題樣式 */
-        .form-label {
-            font-weight: bold;
-            display: block;
-            text-align: left;
-            font-size: 1.2rem;
-            margin-top: 10px;
-            color: #353569;
-        }
-
-        /* 💡 成功頁面專屬：確保完美置中 */
-        .page-success .content-card {
-            margin: auto 0 !important; /* 強制垂直置中 */
-            padding: 20px;
-        }
-
-        /* 社交連結區域的邊框線 */
-        .success-footer-links {
-            width: 100%;
-            max-width: 800px;
-            border-top: none !important;
-            padding-top: 25px;
-        }
-
-        /* 社交連結按鈕：改為半透明背景或底線感，避免太厚重 */
-        .social-link {
-            display: block;
-            text-decoration: none;
-            color: var(--accent);
-            font-size: 1.4rem;
-            padding: 8px 0;
-            margin-bottom: 5px;
-            border-bottom: 1px solid rgba(53, 53, 105, 0.05); /* 輕微底線區隔 */
-            transition: opacity 0.3s;
-        }
-
-        .social-link:hover {
-            opacity: 0.6;
-        }
-
-        /* 💡 針對手機版 (螢幕寬度 600px 以下) 的微調 */
-        @media (max-width: 600px) {
-           
-            html {
-                /* 將基礎字級從 20px 調降至 16px 或 17px */
-                font-size: 16px; 
-            }
-            .content-card {
-                width: 100% !important;
-                margin: 0 auto !important;
-                padding: 10px 20px !important; /* 給予左右對等的留白 */
-                box-sizing: border-box !important;
-                align-items: center !important; /* 確保子元素水平置中 */
-            }
-
-            /* 針對標題再縮小一點點，避免換行 */
-            h1 { font-size: 1.8rem; }
-            h3 { font-size: 1.5rem; }
-
-            .desktop-only-content {
-                display: none !important; /* 💡 確保電腦版完全消失 */
-            }
-
-            .mobile-only-content {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-                align-items: center !important; /* 核心：解決偏左問題 */
-                box-sizing: border-box !important;
-            }
-
-            .page-guide {
-                display: flex !important;
-                flex-direction: column !important;
-                height: 100vh !important;
-                justify-content: flex-start !important;
-                /* 核心修改：從原本的 5vh 改為 12vh 讓內容下降 */
-                padding-top: 8vh !important; 
-                overflow: hidden !important;
-            }
-            
-            .guide-body {
-                font-family: 'LXGW WenKai TC', 'Microsoft JhengHei', sans-serif !important;
-                font-size: 0.8rem !important; /* 稍微調小文字避免過長 */
-            }
-
-            .guide-body strong {
-                font-family: 'LXGW WenKai TC', sans-serif !important;
-                font-weight: 600 !important; /* 強制使用較粗的字重 */
-                color: #30305f !important;   /* 顏色稍微再深一點，提升對比度 */
-                letter-spacing: 0px !important; /* 縮減字距讓重點更緊湊 */
-            }
-
-            /* 💡 1. 縮小注意事項大標題，讓視覺重心平衡 */
-            .page:nth-of-type(4) h3 {
-                font-size: 2.0rem !important;
-                margin-top: 90px;
-                margin-bottom: 20px !important;
-            }
-
-            /* 💡 2. 調整列表文字排列：稍微縮小字級並增加行距 */
-            .page:nth-of-type(4) .chinese-handwriting {
-                font-size: 1.3rem !important; /* 稍微縮小，避免換行雜亂 */
-                line-height: 1.8 !important;   /* 增加行距，提升閱讀舒適度 */
-           }
-
-            .page:nth-of-type(4) .prev-link {
-                font-size: 1.2rem !important;
-            }
-
-            .page:nth-of-type(5) {
-                padding-top: 12vh !important; /* 12vh 的垂直空間 */
-            }
-
-            .page:nth-of-type(5) .nav-footer {
-                margin-top: 30px !important;
-                margin-bottom: 40px !important;   /* 確保距離底部有足夠空間 */
-            }
-
-            .page:nth-of-type(5) .prev-link {
-                font-size: 1.2rem !important;
-                margin-top: -10px !important;
-            }
-
-            .page:nth-of-type(5) h3 {
-                font-size: 2.0rem !important;
-                margin-top: 50px;
-                margin-bottom: 20px !important;
-            }
-
-            /* 2. 縮小分類按鈕 (當日飲品/甜點等) */
-            .cat-btn {
-                /* 將原本的 1.4rem 縮小，例如改為 1.1rem，避免按鈕擠在一起 */
-                font-size: 1.6rem !important;
-                padding: 5px 8px !important; /* 同步稍微縮小按鈕內距，爭取空間 */
-            }
-    
-            .checkout-column {
-                min-width: 100%; /* 強制手機版佔滿全寬 */
-            }
-
-            /* 💡 4. 放大填資料項目的「小標題」 */
-            .form-label {
-                font-size: 1.5rem !important;
-                margin-bottom: 5px !important;
-            }
-
-            /* 💡 5. 放大輸入框內填寫的文字與內容 */
-            input, select, textarea {
-                font-size: 1.4rem !important; /* 放大字體方便閱讀與修改 */
-                font-weight: bold !important;
-                padding: 12px 0 !important;   /* 增加高度，方便手指點選 */
-            }
-    
-            #cart-summary {
-                font-size: 1.25rem !important;
-                padding: 10px !important; /* 縮小購物清單內距 */
-            }
-
-            .nav-footer {
-                /* 💡 1. 縮小外部間距，從原本的 50px 降到 20px */
-                margin-bottom: 20px !important;
-                padding-left: 10px;
-                padding-right: 10px;
-                padding-bottom: 3px; /* 手機版留更多底部空間避免被導覽列遮住 */
-            }
-
-            #product-list {
-                width: 100% !important;
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .page-success {
-                height: 100vh !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                padding-top: 30px !important;
-                padding-bottom: 30px !important; /* 讓底部留白縮小 */
-            }
-    
-            .page-success h3 {
-                font-size: 1.8rem !important;
-            }
-
-            .page-success .mobile-only-content {
-                background: transparent !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: center !important;
-                align-items: center !important;
-                width: 100% !important;
-                padding: 0 20px !important;
-                box-sizing: border-box !important;
-                margin: 0 !important;
-            }
-
-            .page-success .desktop-only-content {
-                display: none !important;
-            }
-
-            .social-link {
-                font-family: 'Caveat', sans-serif !important; /* 英文連結用手寫體更有質感 */
-                font-size: 1.3rem !important;
-                font-weight: bold;
-                margin-bottom: 8px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <!-- ✅ 允許縮放：移除 user-scalable=no，並給較高 maximum-scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>deepcoffee 番外-十厚</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-web@latest/style.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+    @font-face {
+      font-family: 'ChenYuLuoYan';
+      src: url('https://cdn.jsdelivr.net/gh/Chenyu-otf/chenyuluoyan_thin@main/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    html { font-size: 20px; height: 100%; }
+    :root { --primary:#9f9fb8; --accent:#353569; }
+
+    *, body, html, input, button, select, textarea {
+      font-family: 'Caveat', 'ChenYuLuoYan', "Microsoft JhengHei", sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* ✅ 核心：整個畫面固定，避免縮放後出現「整頁可被原生橫向捲動」 */
+    body {
+      margin:0; padding:0;
+      height:100%;
+      width:100%;
+      overflow:hidden;
+      background-color:#F8FBF8;
+      color:var(--accent);
+      user-select:none;
+      -webkit-user-select:none;
+    }
+
+    /* ✅ 新增：固定 wrapper（縮放後也不會讓 body 變成可捲動容器） */
+    .app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #F8FBF8;
+    }
+
+    h1 { font-size: 2.2rem; }
+    h3 { font-size: 1.8rem; }
+
+    .handwriting-elegant {
+      font-family: 'Dancing Script', cursive !important;
+      font-size: 1.8rem;
+    }
+    .handwriting-natural {
+      font-family: 'Caveat', cursive !important;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+
+    .chinese-handwriting {
+      width: 100%;
+      max-width: 90%;
+      margin: 0 auto;
+    }
+
+    /* ✅ 核心：#slider 改成「track」，寬度用 JS 以 px 計算，不再用 700% */
+    .slider-container {
+      display:flex;
+      height: 100%;
+      width: 100%;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      overflow: hidden;          /* ✅ 禁止原生水平捲動 */
+      overscroll-behavior: none; /* ✅ 避免橡皮筋帶出莫名水平 */
+      touch-action: pan-y;       /* ✅ 允許垂直捲動（在可捲動區塊） */
+      margin:0;
+      padding:0;
+    }
+
+    .page {
+      width: 100vw !important;
+      height: 100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      margin:0;
+      box-sizing:border-box;
+      flex-shrink:0;
+      overflow: hidden !important;
+      position: relative;
+    }
+
+    .content-card {
+      background:none;
+      box-shadow:none;
+      padding:0;
+      width:90%;
+      max-width:800px;
+      margin:0 auto;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .page:not(.page-p1)::before {
+      content:'';
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      z-index:-1;
+      transform: translateY(-20px);
+    }
+
+    .page-p1 .content-card {
+      margin: auto 0 !important;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      height:auto;
+    }
+
+    .page-p1 .nav-footer {
+      margin-top:0;
+      position:absolute;
+      bottom:50px;
+    }
+
+    .mobile-only-content { display:none !important; }
+    .desktop-only-content { display:flex !important; flex-direction:column; }
+
+    .page-guide {
+      display:flex !important;
+      flex-direction:column !important;
+      height:100% !important;
+      justify-content:flex-start !important;
+      padding-top:5vh !important;
+      overflow:hidden !important;
+    }
+
+    .page-guide .content-card {
+      height:auto !important;
+      flex:1 1 auto;
+      min-height:0;
+      overflow:visible !important;
+      align-items:center;
+    }
+
+    .guide-body {
+      font-family:'LXGW WenKai TC','Microsoft JhengHei',sans-serif !important;
+      flex:1 1 auto;
+      min-height:0;
+      overflow-y:auto !important;
+      -webkit-overflow-scrolling:touch;
+      width:100%;
+      text-align:left;
+      padding:10px 0;
+      margin:0 !important;
+      overscroll-behavior: contain;
+    }
+
+    .guide-body strong {
+      font-family:'LXGW WenKai TC',sans-serif !important;
+      font-weight:600 !important;
+      color:#30305f !important;
+      letter-spacing:0 !important;
+    }
+
+    .page-guide .guide-footer{
+      flex:0 0 auto;
+      width:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:10px 0 30px !important;
+      margin-top:auto;
+    }
+
+    .guide-btn.active { color:#353569 !important; font-weight:bold !important; }
+
+    .page-guide .guide-title,
+    .page-guide .guide-tabs { flex:0 0 auto; }
+
+    .page-menu { justify-content:flex-start !important; padding-top:6vh; }
+    .page-menu .content-card {
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      height:100%;
+      overflow:hidden;
+    }
+
+    .page-menu h3 { margin-top:40px !important; margin-bottom:20px !important; line-height:1.2; }
+
+    #category-desc { margin-top:0 !important; margin-bottom:15px !important; line-height:1; opacity:0.8; }
+
+    #product-list {
+      width:100%;
+      margin-top:5px;
+      overflow-y:auto;
+      max-height:55vh;
+      padding-bottom:100px;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior: contain;
+    }
+
+    #product-list::-webkit-scrollbar { width: 4px; }
+    #product-list::-webkit-scrollbar-thumb {
+      background: rgba(199,181,163,0.4);
+      border-radius: 10px;
+    }
+
+    .product {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:8px 12px;
+      background: rgba(255,255,255,0.9);
+      margin-bottom:6px;
+      border-radius:8px;
+      width:100% !important;
+      box-sizing:border-box;
+      overflow:hidden;
+    }
+
+    .product-img {
+      width:100px;
+      height:100px;
+      flex-shrink:0;
+      object-fit:cover;
+      border-radius:6px;
+      margin-right:0;
+    }
+
+    .product-info {
+      text-align:left;
+      min-width:0;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding-right:10px;
+    }
+
+    .product-price-section {
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:0;
+    }
+
+    .product-price-section span,
+    .product-price-section div { line-height:1.1 !important; margin:0 !important; }
+
+    .product-info h4 { overflow-wrap:break-word; word-wrap:break-word; font-size:1.3rem; }
+
+    .qty-btn {
+      background:none !important;
+      border:none !important;
+      color:var(--accent) !important;
+      font-size:1.5rem !important;
+      padding:0 10px !important;
+      cursor:pointer;
+      box-shadow:none !important;
+      text-shadow:none !important;
+    }
+
+    .nav-btn {
+      background:none !important;
+      border:none !important;
+      color:var(--accent) !important;
+      font-size:1.4rem !important;
+      padding:10px 0 !important;
+      letter-spacing:2px;
+      cursor:pointer;
+      font-weight:bold !important;
+      box-shadow:none !important;
+    }
+
+    .nav-footer {
+      position: static;
+      margin-top: auto;
+      margin-bottom: 50px;
+      width: 90%;
+      max-width: 650px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      box-sizing:border-box;
+    }
+
+    .nav-footer .nav-btn { width:auto !important; margin:0 auto; }
+
+    .stock-text { font-size:1.1rem !important; margin-bottom:-2px !important; }
+    .price-text { font-size:1.3rem; font-weight:bold; }
+
+    .progress-bar {
+      position: fixed;
+      top:0; left:0;
+      height:4px;
+      background: var(--accent);
+      transition: width 0.3s;
+      z-index: 1000;
+    }
+
+    .cat-btn {
+      background:none !important;
+      border:none !important;
+      padding:5px 10px !important;
+      cursor:pointer;
+      font-size:1.6rem !important;
+      color:#9898ba !important;
+      transition: color 0.3s;
+      box-shadow:none !important;
+    }
+    .cat-btn.active { color:#353569 !important; font-weight:bold; }
+
+    .page-guide .guide-tabs .guide-btn { color:#9898ba !important; font-weight:bold !important; }
+    .page-guide .guide-tabs .guide-btn.active { color:#353569 !important; font-weight:bold !important; }
+
+    .page-checkout { justify-content:flex-start !important; padding-top:3vh; }
+
+    .allow-select,
+    .allow-select strong,
+    strong {
+      user-select:text !important;
+      -webkit-user-select:text !important;
+      cursor:text;
+    }
+
+    .page-checkout .content-card { justify-content:flex-start !important; padding-top:0; }
+
+    .checkout-flex-container { display:flex; gap:30px; flex-wrap:wrap; width:100%; }
+    .checkout-column { flex:1; min-width:300px; max-width:100%; text-align:left; }
+
+    #cart-summary {
+      width:100%;
+      max-width:600px;
+      margin-top:0 !important;
+      margin-bottom:15px;
+      background:#f5f5f5;
+      padding:15px !important;
+      border-radius:8px;
+      font-size:1rem;
+      color:#353569;
+      box-sizing:border-box;
+      text-align:center;
+    }
+
+    #cart-summary br { content:""; margin:2px 0; display:block; }
+    #cart-summary hr { border:0; border-top:1px solid #ddd; margin:10px 0; }
+
+    input, select, textarea {
+      width:100%;
+      border:none !important;
+      border-bottom:1px solid #ddd !important;
+      border-radius:0 !important;
+      background-color:transparent !important;
+      padding:5px 0 !important;
+      margin-top:0;
+      font-size:1.1rem !important;
+      color:#1b1b3a;
+      outline:none;
+      box-sizing:border-box;
+    }
+    input:focus, select:focus, textarea:focus { border-bottom:1.5px solid var(--accent) !important; }
+    input, select, textarea { width:100% !important; margin-left:0 !important; margin-right:0 !important; }
+
+    select {
+      cursor:pointer;
+      background-image:url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat:no-repeat;
+      background-position:right 10px center;
+      background-size:10px;
+      padding-right:25px;
+      -webkit-appearance:none;
+      appearance:none;
+      background: none !important;
+    }
+
+    #submit-btn {
+      width:100%;
+      height:38px;
+      margin-top:20px;
+      background-color:var(--accent);
+      color:white;
+      border:none;
+      border-radius:6px;
+      font-size:1.0rem;
+      cursor:pointer;
+      display:block;
+    }
+
+    .form-label {
+      font-weight:bold;
+      display:block;
+      text-align:left;
+      font-size:1.2rem;
+      margin-top:10px;
+      color:#353569;
+    }
+
+    .page-success .content-card { margin:auto 0 !important; padding:20px; }
+    .success-footer-links { width:100%; max-width:800px; border-top:none !important; padding-top:25px; }
+
+    .social-link {
+      display:block;
+      text-decoration:none;
+      color:var(--accent);
+      font-size:1.4rem;
+      padding:8px 0;
+      margin-bottom:5px;
+      border-bottom:1px solid rgba(53,53,105,0.05);
+      transition: opacity 0.3s;
+    }
+    .social-link:hover { opacity:0.6; }
+
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      .content-card {
+        width:100% !important;
+        margin:0 auto !important;
+        padding:10px 20px !important;
+        box-sizing:border-box !important;
+        align-items:center !important;
+      }
+      h1 { font-size: 1.8rem; }
+      h3 { font-size: 1.5rem; }
+
+      .desktop-only-content { display:none !important; }
+      .mobile-only-content {
+        display:flex !important;
+        flex-direction:column !important;
+        width:100% !important;
+        align-items:center !important;
+        box-sizing:border-box !important;
+      }
+
+      .page-guide { padding-top:8vh !important; }
+
+      .guide-body { font-size:0.8rem !important; }
+
+      .page:nth-of-type(4) h3 { font-size:2.0rem !important; margin-top:90px; margin-bottom:20px !important; }
+      .page:nth-of-type(4) .chinese-handwriting { font-size:1.3rem !important; line-height:1.8 !important; }
+
+      .page:nth-of-type(5) { padding-top:12vh !important; }
+      .page:nth-of-type(5) .nav-footer { margin-top:30px !important; margin-bottom:40px !important; }
+      .page:nth-of-type(5) h3 { font-size:2.0rem !important; margin-top:50px; margin-bottom:20px !important; }
+
+      .cat-btn { font-size:1.6rem !important; padding:5px 8px !important; }
+
+      .checkout-column { min-width:100%; }
+
+      .form-label { font-size:1.5rem !important; margin-bottom:5px !important; }
+      input, select, textarea { font-size:1.4rem !important; font-weight:bold !important; padding:12px 0 !important; }
+
+      #cart-summary { font-size:1.25rem !important; padding:10px !important; }
+
+      .nav-footer { margin-bottom:20px !important; padding:0 10px 3px; }
+
+      #product-list { width:100% !important; padding-left:0; padding-right:0; }
+
+      .page-success { height:100% !important; display:flex !important; flex-direction:column !important; justify-content:center !important; align-items:center !important; padding:30px 0 !important; }
+      .page-success h3 { font-size:1.8rem !important; }
+      .social-link { font-family:'Caveat',sans-serif !important; font-size:1.3rem !important; font-weight:bold; margin-bottom:8px; }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
+    <div class="progress-bar" id="progress"></div>
 
-<div class="progress-bar" id="progress"></div>
-
-<div class="slider-container" id="slider">
-    <section class="page page-p1">
+    <div class="slider-container" id="slider">
+      <!-- Page 0 -->
+      <section class="page page-p1">
         <div class="content-card">
-            <img src="logo.png" style="width: 80%; max-width: 200px; margin: 0 auto;" draggable="false">
+          <img src="logo.png" style="width: 80%; max-width: 200px; margin: 0 auto;" draggable="false">
         </div>
         <div class="nav-footer">
-            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">
-                〈 向左滑動 〉
-            </div>
+          <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
         </div>
-    </section>
+      </section>
 
-    <section class="page page-p1">
+      <!-- Page 1 -->
+      <section class="page page-p1">
         <div class="content-card desktop-only-content">
-            <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
-            <p class="chinese-handwriting" style="color: #636396; font-size: 1.4rem;  width: fit-content; max-width: 90%; margin: 0 auto;">
-                收起10年店面營業後 偶爾還是會想滿足那種玩弄滋味的樂趣<br>
-                挑選各式在地有趣的食材 不定期限時限量開單<br><br>
-                少了一點面對面的熟絡 但是記憶中溫暖的滋味 仍然那樣
-            </p>
+          <h1 style="color: #353569;font-size: 2.0rem;">番外篇</h1>
+          <p class="chinese-handwriting" style="color: #636396; font-size: 1.4rem; width: fit-content; max-width: 90%; margin: 0 auto;">
+            收起10年店面營業後 偶爾還是會想滿足那種玩弄滋味的樂趣<br>
+            挑選各式在地有趣的食材 不定期限時限量開單<br><br>
+            少了一點面對面的熟絡 但是記憶中溫暖的滋味 仍然那樣
+          </p>
         </div>
 
         <div class="content-card mobile-only-content">
-            <h1 style="color: #353569;font-size: 2.0rem; margin-bottom: 50px;">番外篇</h1>
-            <p class="chinese-handwriting" style="color: #636396; font-size: 1.3rem;  width: fit-content; max-width: 95%; margin: 0 auto;">
-                收起10年店面營業後<br>
-                偶爾還是會想滿足那種玩弄滋味的樂趣<br><br>
-                挑選各式在地有趣的食材<br>
-                不定期限時限量開單<br><br><br>
-                少了一點面對面的熟絡<br>
-                但是記憶中溫暖的滋味 仍然那樣
-            </p>
+          <h1 style="color: #353569;font-size: 2.0rem; margin-bottom: 50px;">番外篇</h1>
+          <p class="chinese-handwriting" style="color: #636396; font-size: 1.3rem; width: fit-content; max-width: 95%; margin: 0 auto;">
+            收起10年店面營業後<br>
+            偶爾還是會想滿足那種玩弄滋味的樂趣<br><br>
+            挑選各式在地有趣的食材<br>
+            不定期限時限量開單<br><br><br>
+            少了一點面對面的熟絡<br>
+            但是記憶中溫暖的滋味 仍然那樣
+          </p>
         </div>
-        
+
         <div class="nav-footer">
-            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
-        </div>        
-    </section>
+          <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
+        </div>
+      </section>
 
-    <section class="page page-guide">
+      <!-- Page 2  購買須知 -->
+      <section class="page page-guide">
         <div class="content-card desktop-only-content">
-            <h3 class="guide-title" style="color:#353569; font-size:2.8rem; margin:0 0 0px 0;">購買須知</h3>
-            
-            <div style="font-size: 1.2rem; color: #888; font-weight: bold; text-align: center;">
-                若同時訂購當日商品與預訂商品，請分開下單～
-            </div>
+          <h3 class="guide-title" style="color:#353569; font-size:2.8rem; margin:0 0 0px 0;">購買須知</h3>
 
-            <div class="guide-tabs" style="display:flex; justify-content:center; gap:40px; margin-bottom:40px; height:10px;">
-                <button class="nav-btn guide-btn guide-btn-desktop" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
-                <button class="nav-btn guide-btn guide-btn-desktop" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
-            </div>
+          <div style="font-size: 1.2rem; color: #888; font-weight: bold; text-align: center;">
+            若同時訂購當日商品與預訂商品，請分開下單～
+          </div>
 
-            <div id="guide-content-desktop" class="guide-body"
-                style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:95%; margin:0 auto; line-height:1.8;">
-                1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
-                2. 當日商品請於選定時段內至特定地點取貨。<br>
-                &emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-                &emsp;時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
-                3. 訂單成立付款後，僅能更換等值商品，無法退款。
-            </div>
+          <div class="guide-tabs" style="display:flex; justify-content:center; gap:40px; margin-bottom:40px; height:10px;">
+            <button class="nav-btn guide-btn guide-btn-desktop" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
+            <button class="nav-btn guide-btn guide-btn-desktop" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
+          </div>
+
+          <div id="guide-content-desktop" class="guide-body"
+               style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:95%; margin:0 auto; line-height:1.8;">
+            1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
+            2. 當日商品請於選定時段內至特定地點取貨。<br>
+            &emsp;取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+            &emsp;時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
+            3. 訂單成立付款後，僅能更換等值商品，無法退款。
+          </div>
         </div>
 
         <div class="content-card mobile-only-content">
-            <h3 class="guide-title" style="color:#353569; font-size:2.2rem; margin:0 0 0px 0;">購買須知</h3>
-            
-            <div style="font-size: 1.2rem; color: #888; font-weight: bold; text-align: center;">
-                若同時訂購當日商品與預訂商品，請分開下單～
-            </div>
+          <h3 class="guide-title" style="color:#353569; font-size:2.2rem; margin:0 0 0px 0;">購買須知</h3>
 
-            <div class="guide-tabs" style="display:flex; justify-content:center; gap:30px; margin-bottom:40px; height:10px;">
-                <button class="nav-btn guide-btn guide-btn-mobile" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
-                <button class="nav-btn guide-btn guide-btn-mobile" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
-            </div>
+          <div style="font-size: 1.2rem; color: #888; font-weight: bold; text-align: center;">
+            若同時訂購當日商品與預訂商品，請分開下單～
+          </div>
 
-            <div id="guide-content-mobile" class="guide-body"
-                style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.8;">
-                1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
-                2. 當日商品請於選定時段內至特定地點取貨。<br>
-                • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-                • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
-                3. 訂單成立付款後，僅能更換等值商品，無法退款。
-            </div>
+          <div class="guide-tabs" style="display:flex; justify-content:center; gap:30px; margin-bottom:40px; height:10px;">
+            <button class="nav-btn guide-btn guide-btn-mobile" data-guide="daily" onclick="showGuide('daily')">當日商品</button>
+            <button class="nav-btn guide-btn guide-btn-mobile" data-guide="preorder" onclick="showGuide('preorder')">預訂商品</button>
+          </div>
+
+          <div id="guide-content-mobile" class="guide-body"
+               style="color:#353569; font-size:0.9rem; text-align:left; width:fit-content; max-width:90%; margin:0 auto; line-height:1.8;">
+            1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
+            2. 當日商品請於選定時段內至特定地點取貨。<br>
+            • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+            • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
+            3. 訂單成立付款後，僅能更換等值商品，無法退款。
+          </div>
         </div>
+
         <div class="guide-footer">
-            <div class="handwriting-natural" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px;">〈 向左滑動 〉</div>
-        </div>        
-    </section>
-
-    <section class="page page-menu">
-        <div class="content-card">
-            <h3 class="handwriting-elegant" style="margin-top:0; color: #353569; font-size: 3.2rem;">Menu</h3>
-            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;">
-                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日飲品')">當日飲品</button>
-                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日甜點')">當日甜點</button>
-                <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('預約甜點')">預訂商品</button>
-            </div>
-            <div id="category-desc" style="font-size: 1.2rem; color: #888; margin-bottom: 15px; text-align: center; font-weight: bold;">
-                在特定時段來店取貨
-            </div>
-            <div id="product-list">載入中...</div>
-            <div class="nav-footer">
-                <div style="margin-top:15px; text-align:right; font-weight:bold; font-size:1.2rem; color: #353569;">
-                    購物車(<span id="count">0</span>) 總計: $<span id="total">0</span>
-                </div>
-                <button class="nav-btn" onclick="showCheckout()" style = "text-decoration: underline;">前往結帳</button>                
-            </div>
+          <button class="handwriting-natural"
+                  onclick="nextPage()"
+                  style="background: none; border: none; color: inherit; cursor: pointer; opacity: 0.6; font-size: 0.8rem; letter-spacing: 2px; padding: 0;">
+            〈 我已詳細閱讀並同意，點擊前往選購 〉
+          </button>
         </div>
-    </section>
+      </section>
 
-   <section class="page">
-    <div class="content-card desktop-only-content">
-        <h3 style="color:#353569; font-size: 2.8rem; margin-bottom: 25px;">⚠️ 注意事項</h3>
-        <p class="chinese-handwriting" style="font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto; line-height: 2;">
+      <!-- Page 3 Menu -->
+      <section class="page page-menu">
+        <div class="content-card">
+          <h3 class="handwriting-elegant" style="margin-top:0; color: #353569; font-size: 3.2rem;">Menu</h3>
+          <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;">
+            <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日飲品')">當日飲品</button>
+            <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('當日甜點')">當日甜點</button>
+            <button class="nav-btn cat-btn" style="padding: 5px 12px;" onclick="renderProductsByCat('預約甜點')">預訂商品</button>
+          </div>
+          <div id="category-desc" style="font-size: 1.2rem; color: #888; margin-bottom: 15px; text-align: center; font-weight: bold;">
+            在特定時段來店取貨
+          </div>
+          <div id="product-list">載入中...</div>
+          <div class="nav-footer">
+            <div style="margin-top:15px; text-align:right; font-weight:bold; font-size:1.2rem; color: #353569;">
+              購物車(<span id="count">0</span>) 總計: $<span id="total">0</span>
+            </div>
+            <button class="nav-btn" onclick="showCheckout()" style="text-decoration: underline;">前往結帳</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Page 4 注意事項 -->
+      <section class="page">
+        <div class="content-card desktop-only-content">
+          <h3 style="color:#353569; font-size: 2.8rem; margin-bottom: 25px;">⚠️ 注意事項</h3>
+          <p class="chinese-handwriting" style="font-size: 1.4rem; text-align: left; width: fit-content; max-width: 90%; margin: 0 auto; line-height: 2;">
             1. 如購買<strong>當日商品</strong>，請務必記得在所選時段內取貨。<br>
             2. 如購買<strong>預定商品</strong>，請務必在填寫資訊後，主動私訊我們！<br>
             3. 如有特殊需求，歡迎於結帳頁面告知，並<strong>主動私訊 deep coffee IG</strong>。<br><br>
-        </p>
-        <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 30px;">
+          </p>
+          <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 30px;">
             謝謝您 <br>
             產品皆為手工製作 不加任何防腐劑 請盡早享用！
-        </p>
-    </div>
-
-    <div class="content-card mobile-only-content">
-        <h3 style="color:#353569; font-size: 2.6rem; margin-top: 50px; margin-bottom: 15px;">⚠️ 注意事項</h3>
-        <p style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; text-align: left; width: 95%; margin: 0 auto; line-height: 1.7;">
-            1. 如購買<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">當日商品</strong>，請務必記得在所選時段內取貨。<br>
-            2. 如購買<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">預定商品</strong>，請務必在填寫資訊後，主動私訊我們！<br>
-            3. 如有特殊需求，歡迎於結帳頁面告知，並<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">主動私訊 deep coffee IG</strong>。<br><br>
-        </p>
-        <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 20px;">
-            謝謝您<br>
-            產品皆為手工製作 不加任何防腐劑<br>
-            請盡早享用！
-        </p>
-    </div>
-
-    <div class="nav-footer" style="margin-top: 20px;">
-        <button class="nav-btn" onclick="nextPage()" style="text-decoration: underline;">我已了解</button>
-        <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
-    </div>
-</section>
-
-    <section class="page page-checkout">
-        <div class="content-card" style="max-width: 650px;">
-            <h3 style="margin-bottom: 10px; font-size: 1.8rem; color: #353569;">結帳資訊</h3>
-            <div style="font-weight: bold; font-size: 1.4rem; margin-top: 0px; margin-bottom: 5px; color: #3e2723;">請匯款至</div>
-            <div id="cart-summary" style="font-size:1.2rem; background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:15px;"></div>
-    
-            <div class="checkout-flex-container">
-                <div class="checkout-column">
-                    <label class="form-label">顧客姓名 / IG ID</label>
-                    <input type="text" id="user-name" placeholder="請輸入姓名或 IG ID">
-    
-                    <label class="form-label">手機號碼</label>
-                    <input type="tel" id="user-phone" placeholder="輸入手機號碼">
-    
-                    <div id="account-tail-section">
-                        <label class="form-label">帳號後五碼</label>
-                        <input type="tel" id="account-tail" placeholder="請輸入 5 位數字" maxlength="5">
-                    </div>
-                </div>
-    
-                <div class="checkout-column">
-                    <div id="preorder-method-section" style="display: none;">
-                        <label class="form-label">領取方式</label>
-                        <select id="preorder-type" onchange="togglePreorderFields()">
-                            <option value="宅配">宅配</option>
-                            <option value="面交">面交取貨</option>
-                        </select>
-                    </div>
-                
-                    <div id="pickup-slot-section" style="display: none;">
-                        <label class="form-label">自取時段</label>
-                        <select id="pickup-time">
-                            <option value="下午1:00 - 2:00">13:00 - 14:00</option>
-                            <option value="下午2:00 - 3:00">14:00 - 15:00</option>
-                        </select>                                            
-                    </div>
-                
-                    <div id="delivery-info-section" style="display: none; margin-top: 15px;">
-                        <label id="date-label" class="form-label">預計取貨日期</label>
-                        <input type="date" id="delivery-date" style="margin-bottom: 8px;">
-                        <input type="text" id="delivery-address" placeholder="請輸入完整收件地址">
-                    </div>
-    
-                    <input type="hidden" id="pickup-method">
-    
-                    <div id="special-note-container" style="margin-top: 10px;">
-                        <label class="form-label" style="font-size: 1.0rem; color: #353569;">特殊需求 (選填)</label>
-                        <textarea id="special-note" rows="2" placeholder="請輸入您的需求，&#10;並私訊我們的 IG ！"></textarea>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="nav-footer">
-                <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style="text-decoration: underline;">確認並提交訂單</button>
-                <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">回上一頁修改</span>
-            </div>
-        </div>
-    </section>
-    
-    <section class="page page-success">
-        <div class="content-card desktop-only-content">
-            <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
-            <p id="success-msg-desktop" class="chinese-handwriting" style="font-size: 1.4rem; margin-bottom: 20px;">
-                感謝您的訂購，請等候通知。
-            </p>
-            
-            <div class="success-footer-links">
-                <p style="font-size: 1.4rem; color: #353569; max-width: 800px !important; margin-bottom: 15px;">
-                    除了除了甜點、咖啡之外，下面還有我們的bnb住宿以及選物空間，<br>
-                    有機會歡迎來台東找我們玩喔！
-                </p>
-                
-                <div class="social-grid">
-                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link" style="font-weight: bold;">Deep Coffee IG</a>
-                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link" style="font-weight: bold;">Deep Airbnb IG</a>
-                </div>
-
-                <button class="nav-btn" onclick="location.reload()" style="font-size: 1.2rem !important; font-weight: normal !important; margin-bottom: 40px;">
-                    回首頁再次點餐
-                </button>
-            </div>
+          </p>
         </div>
 
         <div class="content-card mobile-only-content">
-            <h3 style="color: #353569; margin-bottom: 10px;">訂單已成立</h3>
-            <p id="success-msg-mobile" style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; margin-bottom: 20px; max-width: 95%; line-height: 1.6;">
-                感謝您的訂購，請等候通知。
-            </p>
-        
-            <div class="success-footer-links" style="width: 100%;">
-                <p style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; color: #353569; margin-bottom: 20px; max-width: 95%; line-height: 1.6;">
-                    除了甜點、咖啡之外，<br>
-                    下面還有我們的bnb住宿以及選物空間，<br>
-                    有機會歡迎來台東找我們玩喔！
-                </p>
-                <div class="social-grid">
-                    <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
-                    <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
-                </div>
-                <button class="nav-btn" onclick="location.reload()" style="font-weight: normal !important; margin-top: 30px; margin-bottom: 40px;">
-                    回首頁再次點餐
-                </button>
-            </div>
+          <h3 style="color:#353569; font-size: 2.6rem; margin-top: 50px; margin-bottom: 15px;">⚠️ 注意事項</h3>
+          <p style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; text-align: left; width: 95%; margin: 0 auto; line-height: 1.7;">
+            1. 如購買<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">當日商品</strong>，請務必記得在所選時段內取貨。<br>
+            2. 如購買<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">預定商品</strong>，請務必在填寫資訊後，主動私訊我們！<br>
+            3. 如有特殊需求，歡迎於結帳頁面告知，並<strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">主動私訊 deep coffee IG</strong>。<br><br>
+          </p>
+          <p class="chinese-handwriting" style="font-size: 1.4rem; margin-top: 20px;">
+            謝謝您<br>
+            產品皆為手工製作 不加任何防腐劑<br>
+            請盡早享用！
+          </p>
         </div>
-    </section>
-</div>
+
+        <div class="nav-footer" style="margin-top: 20px;">
+          <button class="nav-btn" onclick="nextPage()" style="text-decoration: underline;">我已了解</button>
+          <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">返回修改購物車</span>
+        </div>
+      </section>
+
+      <!-- Page 5 結帳 -->
+      <section class="page page-checkout">
+        <div class="content-card" style="max-width: 650px;">
+          <h3 style="margin-bottom: 10px; font-size: 1.8rem; color: #353569;">結帳資訊</h3>
+          <div class="allow-select" style="font-weight: bold; font-size: 1.1rem; margin-top: 0px; margin-bottom: 15px; color: #3e2723; text-align:left; line-height: 1.8;">
+            匯款帳戶：824 連線商業銀行 （6880 總行）<br>
+            匯款帳號：111004563297
+          </div>
+          <div id="cart-summary" style="font-size:1.2rem; background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:15px;"></div>
+
+          <div class="checkout-flex-container">
+            <div class="checkout-column">
+              <label class="form-label">顧客姓名 / IG ID</label>
+              <input type="text" id="user-name" placeholder="請輸入姓名或 IG ID">
+
+              <label class="form-label">手機號碼</label>
+              <input type="tel" id="user-phone" placeholder="輸入手機號碼">
+
+              <div id="account-tail-section">
+                <label class="form-label">帳號後五碼</label>
+                <input type="tel" id="account-tail" placeholder="請輸入 5 位數字" maxlength="5">
+              </div>
+            </div>
+
+            <div class="checkout-column">
+              <div id="preorder-method-section" style="display: none;">
+                <label class="form-label">領取方式</label>
+                <select id="preorder-type" onchange="togglePreorderFields()">
+                  <option value="宅配">宅配</option>
+                  <option value="面交">面交取貨</option>
+                </select>
+              </div>
+
+              <div id="pickup-slot-section" style="display: none;">
+                <label class="form-label">自取時段</label>
+                <select id="pickup-time">
+                  <option value="下午1:00 - 2:00">13:00 - 14:00</option>
+                  <option value="下午2:00 - 3:00">14:00 - 15:00</option>
+                </select>
+              </div>
+
+              <div id="delivery-info-section" style="display: none; margin-top: 15px;">
+                <label id="date-label" class="form-label">預計取貨日期</label>
+                <input type="date" id="delivery-date" style="margin-bottom: 8px;">
+                <input type="text" id="delivery-address" placeholder="請輸入完整收件地址">
+              </div>
+
+              <input type="hidden" id="pickup-method">
+
+              <div id="special-note-container" style="margin-top: 10px;">
+                <label class="form-label" style="font-size: 1.0rem; color: #353569;">特殊需求 (選填)</label>
+                <textarea id="special-note" rows="2" placeholder="請輸入您的需求，&#10;並私訊我們的 IG ！"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-footer">
+            <button class="nav-btn" id="submit-btn" onclick="submitOrder()" style="text-decoration: underline;">確認並提交訂單</button>
+            <span class="prev-link" style="font-size: 1rem;" onclick="prevPage()">回上一頁修改</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Page 6 success -->
+      <section class="page page-success">
+        <div class="content-card desktop-only-content">
+          <h3 style="color: #353569; font-size: 2.2rem; margin-bottom: 10px;">訂單已成立</h3>
+          <p id="success-msg-desktop" class="chinese-handwriting" style="font-size: 1.4rem; margin-bottom: 20px;">
+            感謝您的訂購，請等候通知。
+          </p>
+
+          <div class="success-footer-links">
+            <p style="font-size: 1.4rem; color: #353569; max-width: 800px !important; margin-bottom: 15px;">
+              除了除了甜點、咖啡之外，下面還有我們的bnb住宿以及選物空間，<br>
+              有機會歡迎來台東找我們玩喔！
+            </p>
+
+            <div class="social-grid">
+              <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link" style="font-weight: bold;">Deep Coffee IG</a>
+              <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link" style="font-weight: bold;">Deep Airbnb IG</a>
+            </div>
+
+            <button class="nav-btn" onclick="location.reload()" style="font-size: 1.2rem !important; font-weight: normal !important; margin-bottom: 40px;">
+              回首頁再次點餐
+            </button>
+          </div>
+        </div>
+
+        <div class="content-card mobile-only-content">
+          <h3 style="color: #353569; margin-bottom: 10px;">訂單已成立</h3>
+          <p id="success-msg-mobile" style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; margin-bottom: 20px; max-width: 95%; line-height: 1.6;">
+            感謝您的訂購，請等候通知。
+          </p>
+
+          <div class="success-footer-links" style="width: 100%;">
+            <p style="font-family: 'LXGW WenKai TC', sans-serif !important; font-size: 0.9rem; color: #353569; margin-bottom: 20px; max-width: 95%; line-height: 1.6;">
+              除了甜點、咖啡之外，<br>
+              下面還有我們的bnb住宿以及選物空間，<br>
+              有機會歡迎來台東找我們玩喔！
+            </p>
+            <div class="social-grid">
+              <a href="https://www.instagram.com/deepcoffee241?igsh=NGE2MzZvcTIzNHM5" target="_blank" class="social-link">Deep Coffee IG</a>
+              <a href="https://www.instagram.com/deepairbnb?igsh=MXVmYzFsdWNsd3J6" target="_blank" class="social-link">Deep Airbnb IG</a>
+            </div>
+            <button class="nav-btn" onclick="location.reload()" style="font-weight: normal !important; margin-top: 30px; margin-bottom: 40px;">
+              回首頁再次點餐
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 
 <script>
-let startX = 0;
+  /* =========================
+     ✅ 你指定：7 頁
+     ========================= */
+     const PAGE_COUNT = 7;
+
+let startX = null;
 let currentPage = 0;
 let cart = [];
 let products = [];
-const slider = document.getElementById('slider');
-const GAS_API = 'https://script.google.com/macros/s/AKfycbxAuM_YOnaQLaDzCfIXmsucHLfQqEzC8qfvMdlfIC9_m2yclWLIcXuaiZcihe2ZyzVg/exec'; 
 
-// --- 滑動與導覽控制 ---
-window.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
-window.addEventListener('touchend', e => {
-    let diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-        if (diff > 0 && currentPage < 3) nextPage(); 
-        if (diff < -50 && currentPage > 0) prevPage();
-    }
-}, {passive: true});
+let zoomLock = false;        // 目前是否縮放中/已縮放
+let gestureHadZoom = false;  // 這次手勢是否跟縮放有關（避免 touchend 換頁）
+let isGestureLocked = false; // 多指/縮放鎖
+let panStart = { x: 0, y: 0 };
 
-window.addEventListener('mousedown', e => {
-    startX = e.clientX;
-    const handleMouseUp = (me) => {
-        let diff = startX - me.clientX;
-        if (Math.abs(diff) > 50) {
-            if (diff > 50 && currentPage < 3) nextPage();
-            if (diff < -50 && currentPage > 0) prevPage();
-        }
-        window.removeEventListener('mouseup', handleMouseUp);
-    };
-    window.addEventListener('mouseup', handleMouseUp);
-});
+  const slider = document.getElementById('slider');
+  const GAS_API = 'https://script.google.com/macros/s/AKfycbxAuM_YOnaQLaDzCfIXmsucHLfQqEzC8qfvMdlfIC9_m2yclWLIcXuaiZcihe2ZyzVg/exec';
 
-function nextPage() {
-    // 檢查：商品清單頁 (Index 2)
-    if (currentPage === 3) {
-        if (cart.length === 0) {
-            alert('您的購物車還是空的，請先挑選商品！');
-            return;
-        }
-        updateCheckoutSummary();
-    }
+/* =========================
+   ✅ 核心修正：用 px 設定 slider 寬度 + 每頁寬度
+   （解決縮放/旋轉後，7頁被原生橫向捲動串起來）
+   ========================= */
+/* =========================
+   ✅ 核心：用 px 設定 slider 寬度 + 每頁寬度
+   ✅ 重點修正：縮放中「不要 layoutSlider」
+   （避免 iOS Safari pinch / double tap 觸發 visualViewport.resize 時跳頁）
+   ========================= */
 
-    // 檢查：結帳資訊頁 (Index 4)
-    if (currentPage === 5) {
-        const phone = document.getElementById('user-phone').value;
-        const tail = document.getElementById('account-tail').value;
-        if (!phone || phone.length < 9) {
-            alert('請輸入正確的手機號碼！');
-            return;
-        }
-        if (!tail || tail.length !== 5) {
-            alert('請輸入正確的帳號後五碼！');
-            return;
-        }
-    }
-
-    if (currentPage < 6) { 
-        currentPage++; 
-        updateSlider(); 
-    }
+function getScale() {
+  return window.visualViewport ? window.visualViewport.scale : 1;
+}
+function isZoomingNow() {
+  return getScale() > 1.02;
+}
+function updateZoomLock() {
+  zoomLock = isZoomingNow();
 }
 
-function prevPage() { if (currentPage > 0) { currentPage--; updateSlider(); } }
+/* ✅ 只在「非縮放中」才做 layout，避免縮放過程跳頁 */
+function layoutSlider(forceNoAnim = true) {
+  const vw = window.innerWidth;
 
-function updateSlider() {
-    slider.style.transform = `translateX(-${currentPage * (100 / 7)}%)`;
-    document.getElementById('progress').style.width = `${((currentPage + 1) / 7) * 100}%`;
-    if (currentPage === 2) {
+  slider.style.width = (vw * PAGE_COUNT) + 'px';
+  document.querySelectorAll('.page').forEach(p => {
+    p.style.width = vw + 'px';
+  });
+
+  // 保險：避免殘留原生 scroll
+  slider.scrollLeft = 0;
+
+  updateSlider(forceNoAnim);
+}
+
+function updateSlider(forceNoAnim = false) {
+  const vw = window.innerWidth;
+  const x = -(currentPage * vw);
+
+  if (forceNoAnim) {
+    const old = slider.style.transition;
+    slider.style.transition = 'none';
+    slider.style.transform = `translate3d(${x}px, 0, 0)`;
+    requestAnimationFrame(() => {
+      slider.style.transition = old || 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    });
+  } else {
+    slider.style.transform = `translate3d(${x}px, 0, 0)`;
+  }
+
+  const progress = document.getElementById('progress');
+  if (progress) {
+    progress.style.width = `${((currentPage + 1) / PAGE_COUNT) * 100}%`;
+  }
+
+  if (currentPage === 2 && typeof showGuide === 'function') {
     showGuide('daily');
   }
 }
 
-function showGuide(type) {
-  const contentDesktop = document.getElementById('guide-content-desktop');
-  const contentMobile  = document.getElementById('guide-content-mobile');
+/* =========================
+   ✅ Resize / VisualViewport：縮放中不 layout，只「固定在當前頁」
+   ========================= */
 
-  const btnsDesktop = document.querySelectorAll('.guide-btn-desktop');
-  const btnsMobile  = document.querySelectorAll('.guide-btn-mobile');
+let relayoutTimer = null;
+function requestRelayout() {
+  clearTimeout(relayoutTimer);
+  relayoutTimer = setTimeout(() => {
+    // ✅ 縮放中不要 layout（避免跳頁）
+    if (isZoomingNow()) return;
+    layoutSlider(true);
+  }, 120);
+}
 
-  // 設定按鈕 active
-  function setActive(btns) {
-    btns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.guide === type);
-    });
+function onViewportChange() {
+  updateZoomLock();
+
+  // ✅ 縮放中：不重算寬度，只把外層 track 拉回「當前頁」的位置
+  // 這樣不會跳頁，但也不會讓 7 頁被串起來水平拖走
+  if (zoomLock) {
+    slider.scrollLeft = 0;
+    updateSlider(true);
+    return;
   }
-  setActive(btnsDesktop);
-  setActive(btnsMobile);
 
-  const dailyHtmlDesktop = `
-    1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
-    2. 當日商品請於選定時段內至特定地點取貨。<br>
-    &emsp; 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-    &emsp; 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
-    3. 訂單成立付款後，僅能更換等值商品，無法退款。
-  `;
+  // 非縮放：可能是旋轉 / UI bar 收合 / 真正尺寸變動 → debounce 後重排
+  requestRelayout();
+}
 
-  const preorderHtmlDesktop = `
-    1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
-    2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
-    3. 響應環保愛地球，將不提供一次性餐具。<br>
-    4. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
-    &emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
-    &emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
-    &emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
-    &emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
-    5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），<br>
-    &emsp; 內容請私訊討論。<br>
-    6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，<br>
-    &emsp; 若運送中變形恕不賠償，請自行評估後下單。<br>
-    7. 食品不適用七天猶豫期，恕不退換貨。<br>
-    &emsp; 如下單付款後，僅能換等值商品，無法退款。<br>
-    8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br><br>
-    ❗下單後一定要私訊Instagram才算完成訂單❗
-  `;
+window.addEventListener('resize', onViewportChange);
 
-  // 3. 定義【手機版】內容 (可以改得更精簡，方便滑動)
-  const dailyHtmlMobile = `
-    1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
-    2. 當日商品請於選定時段內至特定地點取貨。<br>
-    • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
-    • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
-    3. 訂單成立付款後，僅能更換等值商品，無法退款。`;
-  
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', onViewportChange);
+  window.visualViewport.addEventListener('scroll', onViewportChange); // iOS 放大後平移會觸發
+}
+
+/* =========================
+   ✅ 判斷是否在可捲動區（避免在內層捲動時被當成換頁手勢）
+   ========================= */
+function isInScrollable(e) {
+  const t = e.target;
+  if (!t) return false;
+  return !!t.closest('.guide-body, #product-list, input, textarea, select');
+}
+
+/* =========================
+   ✅ 手勢：允許縮放，但縮放中/縮放相關一律不換頁
+   ========================= */
+window.addEventListener('touchstart', (e) => {
+  updateZoomLock();
+
+  // 進入可捲動區：不啟動換頁手勢
+  if (isInScrollable(e)) {
+    startX = null;
+    return;
+  }
+
+  // 只要多指 or 當下已是 zoom 狀態，都算「縮放相關」
+  gestureHadZoom = (e.touches.length > 1) || zoomLock;
+
+  if (e.touches.length > 1 || zoomLock) {
+    isGestureLocked = true;
+    startX = null;
+    return;
+  }
+
+  isGestureLocked = false;
+  startX = e.touches[0].clientX;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  // 過程中變多指：視為縮放相關
+  if (e.touches.length > 1) {
+    gestureHadZoom = true;
+    isGestureLocked = true;
+  }
+}, { passive: true });
+
+window.addEventListener('touchend', (e) => {
+  updateZoomLock();
+
+  if (isInScrollable(e)) return;
+
+  // ✅ 與縮放有關就不換頁
+  if (gestureHadZoom || isGestureLocked || zoomLock) return;
+
+  if (startX == null) return;
+  if (window.getSelection().toString().length > 0) return;
+
+  const diff = startX - e.changedTouches[0].clientX;
+  const threshold = 80; // 你可改回 100
+
+  // ✅ 你的單向規則（照你現在設定）
+  if (diff > threshold) {
+    if (currentPage < 2) nextPage();
+  } else if (diff < -threshold) {
+    if (currentPage > 0 && currentPage <= 3) prevPage();
+  }
+}, { passive: true });
+
+/* =========================
+   ✅ 縮放時：單指水平拖移不要把外層 7 頁拖出來
+   （pinch 不攔；可捲動區照常上下捲）
+   ========================= */
+window.addEventListener('touchstart', (e) => {
+  if (!isZoomingNow()) return;
+  if (e.touches.length !== 1) return;
+  panStart.x = e.touches[0].clientX;
+  panStart.y = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (!isZoomingNow()) return;
+  if (e.touches.length !== 1) return;
+  if (isInScrollable(e)) return;
+
+  const dx = e.touches[0].clientX - panStart.x;
+  const dy = e.touches[0].clientY - panStart.y;
+
+  // 有明顯水平意圖就攔
+  if (Math.abs(dx) > Math.abs(dy) * 0.7) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+/* =========================
+   ✅ 初始化（務必呼叫一次）
+   ========================= */
+document.addEventListener('DOMContentLoaded', () => {
+  updateZoomLock();
+  layoutSlider(true);
+  updateSlider(true);
+});
+
+
+/* =========================
+   ✅ 桌機滑鼠拖曳
+   ========================= */
+window.addEventListener('mousedown', (e) => {
+  if (currentPage > 3) return;
+
+  const startScale = window.visualViewport ? window.visualViewport.scale : 1;
+  const downX = e.clientX;
+
+  const handleMouseUp = (me) => {
+    const currentScale = window.visualViewport ? window.visualViewport.scale : 1;
+    if (startScale > 1.05 || currentScale > 1.05) {
+      window.removeEventListener('mouseup', handleMouseUp);
+      return;
+    }
+
+    const diff = downX - me.clientX;
+    const threshold = 100;
+
+    if (diff > threshold) {
+      if (currentPage < 2) nextPage();
+    } else if (diff < -threshold) {
+      if (currentPage > 0 && currentPage <= 3) prevPage();
+    }
+    window.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  window.addEventListener('mouseup', handleMouseUp);
+});
+
+/* =========================
+   ✅ 桌機/筆電：阻止原生水平捲動（觸控板左右滑、Shift+滾輪）
+   - 不影響可捲動區塊的上下捲
+   ========================= */
+   window.addEventListener('wheel', (e) => {
+  // 在可捲動區塊內：放行（讓它可以上下捲）
+  if (isInScrollable(e)) return;
+
+  // 只要有「水平意圖」（觸控板左右滑 or shift+滾輪），就阻止
+  const hasHorizontalIntent =
+    Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.6 || e.shiftKey;
+
+  if (hasHorizontalIntent) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+  function nextPage() {
+    if (currentPage === 3) {
+      if (cart.length === 0) {
+        alert('您的購物車還是空的，請先挑選商品！');
+        return;
+      }
+      updateCheckoutSummary();
+    }
+
+    if (currentPage === 5) {
+      const phone = document.getElementById('user-phone').value;
+      const tail = document.getElementById('account-tail').value;
+      if (!phone || phone.length < 9) {
+        alert('請輸入正確的手機號碼！');
+        return;
+      }
+      if (!tail || tail.length !== 5) {
+        alert('請輸入正確的帳號後五碼！');
+        return;
+      }
+    }
+
+    if (currentPage < PAGE_COUNT - 1) {
+      currentPage++;
+      updateSlider();
+    }
+  }
+
+  function prevPage() {
+    if (currentPage > 0) {
+      currentPage--;
+      updateSlider();
+    }
+  }
+
+  function showGuide(type) {
+    const contentDesktop = document.getElementById('guide-content-desktop');
+    const contentMobile  = document.getElementById('guide-content-mobile');
+
+    const btnsDesktop = document.querySelectorAll('.guide-btn-desktop');
+    const btnsMobile  = document.querySelectorAll('.guide-btn-mobile');
+
+    function setActive(btns) {
+      btns.forEach(btn => btn.classList.toggle('active', btn.dataset.guide === type));
+    }
+    setActive(btnsDesktop);
+    setActive(btnsMobile);
+
+    const dailyHtmlDesktop = `
+      1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
+      2. 當日商品請於選定時段內至特定地點取貨。<br>
+      &emsp; 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+      &emsp; 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
+      3. 訂單成立付款後，僅能更換等值商品，無法退款。
+    `;
+
+    const preorderHtmlDesktop = `
+      1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
+      2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
+      3. 響應環保愛地球，將不提供一次性餐具。<br>
+      4. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
+      &emsp;&emsp;• 若選擇<strong>面交取貨</strong>：<br>
+      &emsp;&emsp;確認取貨時間後，如需更改時間請務必事先電話告知。<br>
+      &emsp;&emsp;• 若選擇<strong>宅配</strong>：<br>
+      &emsp;&emsp;黑貓低溫宅配 $180~250 以件數尺寸計費，出貨日隔日送達 (離島另計)。<br>
+      5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），<br>
+      &emsp; 內容請私訊討論。<br>
+      6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，<br>
+      &emsp; 若運送中變形恕不賠償，請自行評估後下單。<br>
+      7. 食品不適用七天猶豫期，恕不退換貨。<br>
+      &emsp; 如下單付款後，僅能換等值商品，無法退款。<br>
+      8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br><br>
+      ❗下單後一定要私訊Instagram才算完成訂單❗
+    `;
+
+    const dailyHtmlMobile = `
+      1. 我們僅接受轉帳方式付款，<strong>請於訂購時完成轉帳</strong>。<br>
+      2. 當日商品請於選定時段內至特定地點取貨。<br>
+      • 取貨地址：<strong>台東縣台東市錦州街51號</strong><br>
+      • 時段有以下選擇：<strong>13:00 - 14:00 / 14:00 - 15:00</strong><br>
+      3. 訂單成立付款後，僅能更換等值商品，無法退款。`;
+
     const preorderHtmlMobile = `
-    1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
-    2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
-    3. 響應環保愛地球，將不提供一次性餐具。<br>
-    4. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
-    • 若選擇<strong>面交取貨</strong>：<br>
-    確認取貨時間後，如需更改時間請務必事先電話告知。<br>
-    • 若選擇<strong>宅配</strong>：<br>
-    黑貓低溫宅配 $180~250 以件數尺寸計費，<br>
-    出貨日隔日送達 (離島另計)。<br>
-    5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），內容請私訊討論。<br>
-    6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
-    7. 食品不適用七天猶豫期，恕不退換貨。<br>
-    如下單付款後，僅能換等值商品，無法退款。<br>
-    8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br><br>
-    ❗<strong>下單後一定要私訊Instagram才算完成訂單</strong>❗`;
+      1. 送出訂單後，<strong>請務必立即主動私訊我們的 IG</strong>。<br>
+      2. 製作商品約需 3-5 個工作天，請告知預計取貨時間，我們確認是否能開單。<br>
+      3. 響應環保愛地球，將不提供一次性餐具。<br>
+      4. 可選擇<strong>面交自取</strong>或<strong>宅配寄送</strong>。<br>
+      • 若選擇<strong>面交取貨</strong>：<br>
+      確認取貨時間後，如需更改時間請務必事先電話告知。<br>
+      • 若選擇<strong>宅配</strong>：<br>
+      黑貓低溫宅配 $180~250 以件數尺寸計費，<br>
+      出貨日隔日送達 (離島另計)。<br>
+      5. 若需客製或急單，需加收$200~$500不等費用（依製作時間），內容請私訊討論。<br>
+      6. 宅配蛋糕出貨前盡可能包裝完善，但仍有損壞風險，若運送中變形恕不賠償，請自行評估後下單。<br>
+      7. 食品不適用七天猶豫期，恕不退換貨。<br>
+      如下單付款後，僅能換等值商品，無法退款。<br>
+      8. <strong>待確認訂單細節後再進行付款</strong>，謝謝您！<br><br>
+      ❗<strong>下單後一定要私訊Instagram才算完成訂單</strong>❗`;
 
-  // 4. 分別寫入對應的容器
-  if (contentDesktop) {
-    contentDesktop.innerHTML = (type === 'daily') ? dailyHtmlDesktop : preorderHtmlDesktop;
-    contentDesktop.scrollTop = 0;
+    if (contentDesktop) {
+      contentDesktop.innerHTML = (type === 'daily') ? dailyHtmlDesktop : preorderHtmlDesktop;
+      contentDesktop.scrollTop = 0;
+    }
+    if (contentMobile) {
+      contentMobile.innerHTML = (type === 'daily') ? dailyHtmlMobile : preorderHtmlMobile;
+      contentMobile.scrollTop = 0;
+    }
   }
-  if (contentMobile) {
-    contentMobile.innerHTML = (type === 'daily') ? dailyHtmlMobile : preorderHtmlMobile;
-    contentMobile.scrollTop = 0;
-  }
-}
 
-// --- 資料處理與結帳 ---
-async function init() {
+  async function init() {
     try {
-        const resp = await fetch(GAS_API);
-        products = await resp.json();
-        // 不要直接呼叫 renderProducts，改呼叫 renderProductsByCat 來啟動變色與說明
-        renderProductsByCat('當日飲品');
+      const resp = await fetch(GAS_API);
+      products = await resp.json();
+      renderProductsByCat('當日飲品');
     } catch (err) {
-        document.getElementById('product-list').innerHTML = "目前無法連線至資料庫";
+      document.getElementById('product-list').innerHTML = "目前無法連線至資料庫";
     }
-}
+  }
 
-let currentCategory = '當日飲品';
-function renderProductsByCat(cat) {
+  let currentCategory = '當日飲品';
+
+  function renderProductsByCat(cat) {
     currentCategory = cat;
-    // 取得說明文字的區塊
+
     const descDiv = document.getElementById('category-desc');
-    
-    // 根據類別名稱切換文字
-    if (cat === '預約甜點') {
-        descDiv.innerText = '宅配／面交取貨';
-    } else {
-        // 當日飲品 或 當日甜點
-        descDiv.innerText = '在特定時段來店取貨';
-    }
+    descDiv.innerText = (cat === '預約甜點') ? '宅配／面交取貨' : '在特定時段來店取貨';
 
     const buttons = document.querySelectorAll('.page-menu .cat-btn');
     buttons.forEach(btn => {
-        const btnText = btn.innerText.trim();
-        // 💡 修正邏輯：如果傳入的是「預約甜點」，則讓文字為「預訂商品」的按鈕變深色
-        if (btnText === cat || (cat === '預約甜點' && btnText === '預訂商品')) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+      const btnText = btn.innerText.trim();
+      if (btnText === cat || (cat === '預約甜點' && btnText === '預訂商品')) btn.classList.add('active');
+      else btn.classList.remove('active');
     });
 
-    renderProducts(products); // 執行過濾與渲染
-}
+    renderProducts(products);
 
-function renderProducts(data) {
+    const listDiv = document.getElementById('product-list');
+    if (listDiv) listDiv.scrollTop = 0;
+  }
+
+  function renderProducts(data) {
     const listDiv = document.getElementById('product-list');
     const filteredData = data.filter(p => p.category && p.category.trim() === currentCategory);
 
     if (filteredData.length === 0) {
-        listDiv.innerHTML = `<div style="padding:20px; color:#888;">【${currentCategory}】目前無商品</div>`;
-        return;
+      listDiv.innerHTML = `<div style="padding:20px; color:#888;">【${currentCategory}】目前無商品</div>`;
+      return;
     }
 
     listDiv.innerHTML = filteredData.map((p) => {
-        const realIndex = products.findIndex(item => item.name === p.name);
-        const cartItem = cart.find(item => item.name === p.name);
-        const count = cartItem ? cartItem.qty : 0;
-        const currentAvailable = p.stock - count;
-        const out = currentAvailable <= 0;
+      const realIndex = products.findIndex(item => item.name === p.name);
+      const cartItem = cart.find(item => item.name === p.name);
+      const count = cartItem ? cartItem.qty : 0;
+      const currentAvailable = p.stock - count;
+      const out = currentAvailable <= 0;
 
-        return `
-            <div class="product">
-                <div class="product-info">
-                    <h4 style="margin:0; font-size:1.6rem;">${p.name}</h4>
-                </div>
-                
-                <div class="product-price-section">
-                    <span class="stock-text" style="color:${out ? '#ff4d4d' : '#888'};">
-                        ${out ? '已售完' : '剩餘 ' + currentAvailable}
-                    </span>
-                    
-                    <div class="price-text">$${p.price}</div>
-                    
-                    <div class="qty-controls">
-                        ${count > 0 ? `
-                            <button class="qty-btn" onclick="removeFromCart(${realIndex})">−</button>
-                            <span style="font-weight:bold; min-width:20px; text-align:center; font-size:1rem;">${count}</span>
-                        ` : ''}
-                        <button class="qty-btn" onclick="addToCart(${realIndex})" ${out?'style="opacity:0.2" disabled':''}>+</button>
-                    </div>
-                </div>
+      const imgHtml = (p.img && p.img.trim() !== "")
+        ? `<img src="${p.img}" class="product-img" onerror="this.style.display='none'" alt="${p.name}">`
+        : "";
+
+      return `
+        <div class="product">
+          ${imgHtml}
+          <div class="product-info">
+            <h4 style="margin:0; font-size:1.3rem;">${p.name}</h4>
+          </div>
+          <div class="product-price-section">
+            <span class="stock-text" style="color:${out ? '#ff4d4d' : '#888'};">
+              ${out ? '已售完' : '剩餘 ' + currentAvailable}
+            </span>
+            <div class="price-text">$${p.price}</div>
+            <div class="qty-controls">
+              ${count > 0 ? `
+                <button class="qty-btn" onclick="removeFromCart(${realIndex})">−</button>
+                <span style="font-weight:bold; min-width:20px; text-align:center; font-size:1rem;">${count}</span>
+              ` : ''}
+              <button class="qty-btn" onclick="addToCart(${realIndex})" ${out ? 'style="opacity:0.2" disabled' : ''}>+</button>
             </div>
-        `;
+          </div>
+        </div>
+      `;
     }).join('');
-}
+  }
 
-function addToCart(index) {
+  function addToCart(index) {
     const p = products[index];
     const item = cart.find(c => c.name === p.name);
-    
-    if(item) {
-        if(item.qty >= p.stock) return alert('庫存不足');
-        item.qty++;
+
+    if (item) {
+      if (item.qty >= p.stock) return alert('庫存不足');
+      item.qty++;
     } else {
-        cart.push({ name: p.name, price: p.price, qty: 1 });
+      cart.push({ name: p.name, price: p.price, qty: 1 });
     }
-    
-    // 【更新】重新渲染商品列表，讓按鈕旁的數字更新
+
     renderProducts(products);
     updateUI();
-}
+  }
 
-function removeFromCart(index) {
+  function removeFromCart(index) {
     const p = products[index];
     const itemIndex = cart.findIndex(c => c.name === p.name);
-    
-    if (itemIndex > -1) {
-        if (cart[itemIndex].qty > 1) {
-            cart[itemIndex].qty--;
-        } else {
-            cart.splice(itemIndex, 1); // 數量為 1 時，直接從陣列移除
-        }
-    }
-    
-    renderProducts(products); // 重新渲染列表
-    updateUI(); // 更新總金額與數量顯示
-}
 
-function updateUI() {
+    if (itemIndex > -1) {
+      if (cart[itemIndex].qty > 1) cart[itemIndex].qty--;
+      else cart.splice(itemIndex, 1);
+    }
+
+    renderProducts(products);
+    updateUI();
+  }
+
+  function updateUI() {
     document.getElementById('count').innerText = cart.reduce((a, b) => a + b.qty, 0);
     document.getElementById('total').innerText = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-}
+  }
 
-function updateCheckoutSummary() {
+  function updateCheckoutSummary() {
     let total = document.getElementById('total').innerText;
     let summary = cart.map(i => `${i.name} x ${i.qty}`).join("<br>");
     document.getElementById('cart-summary').innerHTML = summary + "<hr>總計: $" + total;
-}
+  }
 
-function showCheckout() {
-    // 1. 偵測購物車內容類別
+  function showCheckout() {
     const categories = cart.map(item => {
-        const p = products.find(prod => prod.name === item.name);
-        return p ? p.category.trim() : "";
+      const p = products.find(prod => prod.name === item.name);
+      return p ? p.category.trim() : "";
     });
 
     const hasDaily = categories.some(cat => cat === '當日飲品' || cat === '當日甜點');
     const hasPreorder = categories.some(cat => cat === '預約甜點');
 
-    // 💡 核心邏輯：若同時存在，提醒分開下單
     if (hasDaily && hasPreorder) {
-        alert("溫馨提示：當日商品與預約商品需分開下單，請調整購物車內容，謝謝您！");
-        return;
+      alert("溫馨提示：當日商品與預約商品需分開下單，請調整購物車內容，謝謝您！");
+      return;
     }
 
-    // 2. 根據類別顯示/隱藏區塊
-    // 重設欄位顯示
     document.getElementById('account-tail-section').style.display = hasDaily ? 'block' : 'none';
     document.getElementById('pickup-slot-section').style.display = hasDaily ? 'block' : 'none';
     document.getElementById('preorder-method-section').style.display = hasPreorder ? 'block' : 'none';
     document.getElementById('delivery-info-section').style.display = hasPreorder ? 'block' : 'none';
 
     if (hasPreorder) {
-        // 💡 1. 強制設定選單預設為「宅配」
-        document.getElementById('preorder-type').value = "宅配";
-        
-        // 💡 2. 立即執行切換函式，確保地址欄位顯示、時段選單隱藏
-        togglePreorderFields();
+      document.getElementById('preorder-type').value = "宅配";
+      togglePreorderFields();
 
-        // 3. 設定 3 天後的日期限制邏輯
-        const today = new Date();
-        today.setDate(today.getDate() + 3); // 今天加 3 天
-        
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0'); // 月份補零
-        const dd = String(today.getDate()).padStart(2, '0');      // 日期補零
-        
-        const minDate = `${yyyy}-${mm}-${dd}`;
-        const dateInput = document.getElementById('delivery-date');
-        
-        dateInput.min = minDate;   // 設定最小值，防止選取太早的日期
-        dateInput.value = minDate; // 預設直接選中該日期，省去顧客操作
+      const today = new Date();
+      today.setDate(today.getDate() + 3);
+
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+
+      const minDate = `${yyyy}-${mm}-${dd}`;
+      const dateInput = document.getElementById('delivery-date');
+
+      dateInput.min = minDate;
+      dateInput.value = minDate;
     }
 
-    // 3. 特殊需求欄位：永遠強制顯示
     document.getElementById('special-note-container').style.display = 'block';
 
     const noteInput = document.getElementById('special-note');
+    if (hasDaily) noteInput.placeholder = "如果取貨時間需要協調，\n請填寫想取貨時間並私訊我們的 IG ～";
+    else noteInput.placeholder = "請輸入您的需求，\n並私訊我們的 IG ！";
 
-    // 3. 根據類別更新提示文字
-    if (hasDaily) {
-        // 當日商品的提示
-        noteInput.placeholder = "如果取貨時間需要協調，\n請填寫想取貨時間並私訊我們的 IG ～";
-    } else {
-        // 預訂商品的提示
-        noteInput.placeholder = "請輸入您的需求，\n並私訊我們的 IG ！";
-    }
-
-    // 3. 設定後台紀錄用的取貨方式
     let methodValue = "";
     if (hasDaily) methodValue = "自取";
     else if (hasPreorder) methodValue = document.getElementById('preorder-type').value;
 
-    // 確保 pickup-method 這個隱藏欄位有拿到值，後台才收得到
     document.getElementById('pickup-method').value = methodValue;
 
     updateCheckoutSummary();
     nextPage();
-}
+  }
 
-// 切換顯示邏輯
-function togglePreorderFields() {
+  function togglePreorderFields() {
     const type = document.getElementById('preorder-type').value;
     const addrInput = document.getElementById('delivery-address');
     const dateLabel = document.getElementById('date-label');
 
     if (type === '面交') {
-        // 💡 修正：隱藏地址欄位，並清空可能的舊資料
-        addrInput.style.display = 'none';
-        addrInput.value = ""; 
-        dateLabel.innerText = "取貨日期";
+      addrInput.style.display = 'none';
+      addrInput.value = "";
+      dateLabel.innerText = "取貨日期";
     } else {
-        // 💡 修正：顯示地址欄位
-        addrInput.style.display = 'block';
-        dateLabel.innerText = "預計到貨日期";
+      addrInput.style.display = 'block';
+      dateLabel.innerText = "預計到貨日期";
     }
-}
+  }
 
-function toggleSpecialNote() {
-    const pickupTime = document.getElementById('pickup-time').value;
-    const noteContainer = document.getElementById('special-note-container');
-    const note = document.getElementById('special-note').value.trim();
-}
-
-async function submitOrder() {
+  async function submitOrder() {
     const name = document.getElementById('user-name').value;
     const phone = document.getElementById('user-phone').value;
     const tail = document.getElementById('account-tail').value;
     const note = document.getElementById('special-note').value.trim();
 
-    // 取得當前類別
     const isDailyOrder = document.getElementById('account-tail-section').style.display === 'block';
 
-    // 💡 驗證：當日商品才需要後五碼
     if (!name || !phone) return alert('請填寫姓名與手機號碼！');
     if (isDailyOrder && tail.length !== 5) return alert('請輸入帳號後五碼！');
 
@@ -1377,58 +1315,46 @@ async function submitOrder() {
     let methodValue = "";
 
     if (isDailyOrder) {
-        methodValue = "自取";
-        details.push(`自取時段: ${document.getElementById('pickup-time').value}`);
+      methodValue = "自取";
+      details.push(`自取時段: ${document.getElementById('pickup-time').value}`);
     } else {
-        const preType = document.getElementById('preorder-type').value;
-        const date = document.getElementById('delivery-date').value;
-        const addr = document.getElementById('delivery-address').value;
+      const preType = document.getElementById('preorder-type').value;
+      const date = document.getElementById('delivery-date').value;
+      const addr = document.getElementById('delivery-address').value;
 
-        // 💡 邏輯修正：如果是「宅配」才檢查地址
-        if (preType === '宅配') {
-            if (!date || !addr) return alert('請完整填寫預計到貨日期與地址！');
-            details.push(`宅配日期: ${date}\n地址: ${addr}`);
-        } else {
-            // 如果是「面交」，只檢查日期
-            if (!date) return alert('請選擇取貨日期！');
-            details.push(`面交日期: ${date}`);
-        }
-        methodValue = preType;
+      if (preType === '宅配') {
+        if (!date || !addr) return alert('請完整填寫預計到貨日期與地址！');
+        details.push(`宅配日期: ${date}\n地址: ${addr}`);
+      } else {
+        if (!date) return alert('請選擇取貨日期！');
+        details.push(`面交日期: ${date}`);
+      }
+      methodValue = preType;
     }
 
-    // 💡 3. 核心變更：若有特殊需求，特別標出並加入清單
     if (note !== "") {
-        methodValue = "★" + methodValue; // 在開頭加上星號
-        details.push(`★ 特殊需求: ${note}`);
+      methodValue = "★" + methodValue;
+      details.push(`★ 特殊需求: ${note}`);
     }
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.innerText = "訂單傳送中...";
 
-    // 💡 1. 準備訊息所需的資料
-    const categories = cart.map(item => {
-        const p = products.find(prod => prod.name === item.name);
-        return p ? p.category.trim() : "";
-    });
-    const hasDaily = categories.some(cat => cat === '當日飲品' || cat === '當日甜點');
-    const hasPreorder = categories.some(cat => cat === '預約甜點');
+    const time = document.getElementById('pickup-time') ? document.getElementById('pickup-time').value : "";
+    const date = document.getElementById('delivery-date') ? document.getElementById('delivery-date').value : "";
+    const address = "台東縣台東市錦州街51號";
 
-    const time = document.getElementById('pickup-time').value;
-    const date = document.getElementById('delivery-date').value;
-    const address = "台東縣台東市錦州街51號"; // 💡 請在此替換成實際取貨地址
-
-    // 💡 2. 根據條件生成對應訊息
     let msgDesktop = "感謝您的訂購，請等候通知。";
     let msgMobile = "感謝您的訂購，請等候通知。";
     if (isDailyOrder) {
-        msgDesktop = `感謝您的訂購！<br>請記得於 ${time} 至${address}取貨！`;
-        msgMobile  =`感謝您的訂購！<br>請記得於 ${time}<br>至${address}取貨！`;
-    } else if (hasPreorder) {
-        msgDesktop = `
+      msgDesktop = `感謝您的訂購！<br>請記得於 ${time} 至${address}取貨！`;
+      msgMobile  = `感謝您的訂購！<br>請記得於 ${time}<br>至${address}取貨！`;
+    } else {
+      msgDesktop = `
         感謝您的訂購！<strong>請務必主動私訊我們的 IG</strong> ～<br>
         待確認訂單後，將安排於${date}前完成出貨，謝謝您！`;
-        msgMobile  = `
+      msgMobile  = `
         感謝您的訂購！<br>
         <strong style="font-family:'LXGW WenKai TC', sans-serif !important; color: #30305f;">請務必主動私訊我們的 IG</strong> ～<br>
         待確認訂單後，將於 ${date} 前完成出貨，<br>
@@ -1436,48 +1362,47 @@ async function submitOrder() {
     }
 
     const orderData = {
-        name: name,
-        phone: phone,
-        accountTail: tail,
-        pickupMethod: methodValue,
-        pickupDetail: details.join("\n\n"), // 合併資訊寫入試算表 I 欄
-        cart: cart,
-        totalAmount: document.getElementById('total').innerText
+      name,
+      phone,
+      accountTail: tail,
+      pickupMethod: methodValue,
+      pickupDetail: details.join("\n\n"),
+      cart,
+      totalAmount: document.getElementById('total').innerText
     };
 
     try {
-        const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
-        const result = await resp.json();
-        
-        if (result.status === "Success") {
-            // 💡 修正：將 DOM 元素變數更名（例如加上 el 字尾），避免與訊息字串衝突
-            const elDesktop = document.getElementById('success-msg-desktop');
-            const elMobile = document.getElementById('success-msg-mobile');
-    
-            // 💡 修正：分別將對應的字串變數塞入 HTML
-            if (elDesktop) elDesktop.innerHTML = msgDesktop; 
-            if (elMobile) elMobile.innerHTML = msgMobile;
+      const resp = await fetch(GAS_API, { method: 'POST', body: JSON.stringify(orderData) });
+      const result = await resp.json();
 
-            currentPage = 6;
-            updateSlider();
-        } else {
-            alert('系統錯誤: ' + result.message);
-            btn.disabled = false;
-            btn.innerText = "確認並提交訂單";
-        }
-    } catch (err) {
-        alert('提交失敗，請檢查網路連線');
+      if (result.status === "Success") {
+        const elDesktop = document.getElementById('success-msg-desktop');
+        const elMobile = document.getElementById('success-msg-mobile');
+        if (elDesktop) elDesktop.innerHTML = msgDesktop;
+        if (elMobile) elMobile.innerHTML = msgMobile;
+
+        currentPage = 6;
+        updateSlider();
+      } else {
+        alert('系統錯誤: ' + result.message);
         btn.disabled = false;
         btn.innerText = "確認並提交訂單";
+      }
+    } catch (err) {
+      alert('提交失敗，請檢查網路連線');
+      btn.disabled = false;
+      btn.innerText = "確認並提交訂單";
     }
-}
+  }
 
-init();
-updateSlider();
-document.addEventListener('DOMContentLoaded', () => {
-  showGuide('daily');
-});
-
+  // 初始化
+  document.addEventListener('DOMContentLoaded', () => {
+    layoutSlider(true);
+    showGuide('daily');
+    init();
+    updateSlider(true);
+  });
 </script>
+
 </body>
 </html>
