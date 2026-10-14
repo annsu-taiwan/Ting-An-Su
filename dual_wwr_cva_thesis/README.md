@@ -15,7 +15,7 @@ The model prices the unilateral CVA of an interest rate swap under two separate 
 With $M$ paths and $n$ time steps, the CVA is
 
 $$
-CVA = -(1-R)P(0,T)\sum_{k=1}^{n}\sum_{j=1}^{M}\frac{E_j(t_k)}{P^{(j)}(t_k,T)}w_j(t_k)\Delta Q_j^{diff}(t_k)
+CVA = -(1-R)\,P(0,T)\sum_{k=1}^{n}\sum_{j=1}^{M}\frac{E_j(t_k)}{P^{(j)}(t_k,T)}w_j(t_k)\Delta Q_j^{diff}(t_k)
 $$
 
 where $E_j(t_k)$ is the exposure, $w_j(t_k)$ the copula path weight and $\Delta Q_j^{diff}(t_k)$ the diffusive default probability of path $j$ in period $k$.
